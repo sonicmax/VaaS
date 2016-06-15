@@ -1,4 +1,5 @@
-(function() {		
+(function() {
+	console.log("help me");
 	var timestamp = document.getElementById("timestamp");
 	var post = document.getElementById('vesper_post');
 	
