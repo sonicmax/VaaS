@@ -696,3 +696,18 @@ a.jump-arrow {
 	cursor: pointer;
 	text-decoration: underline;		
 }
+
+/*
+
+   Start of VaaS exclusive CSS rules 
+
+*/ 
+
+.spinning {
+	-webkit-animation:spin 2s linear infinite;
+}
+
+@-webkit-keyframes spin { 100% {
+		-webkit-transform:rotate(360deg);
+	}
+}
