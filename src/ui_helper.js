@@ -1,5 +1,4 @@
 (function() {
-	console.log("help me");
 	var timestamp = document.getElementById("timestamp");
 	var post = document.getElementById('vesper_post');
 	
@@ -15,7 +14,7 @@
 	var xhr = new XMLHttpRequest();
 	xhr.open('GET', "http://vaas.herokuapp.com/", true);
 	
-	xhr.onload = (xhr.responseText) => {
+	xhr.onload = () => {
 		if (xhr.status === 200) {
 			var parsedResponse = JSON.parse(xhr.responseText);			
 			post.innerHTML = parsedResponse.post;
