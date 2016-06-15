@@ -14,10 +14,10 @@
 	var xhr = new XMLHttpRequest();
 	xhr.open('GET', "http://vaas.herokuapp.com/", true);
 	
-	xhr.onload = (xhr.response) => {
+	xhr.onload = (xhr.responseText) => {
 		if (this.status == 200) {
-			console.log(xhr.response);
-			post.innerHTML = response.post;
+			var parsedResponse = JSON.parse(xhr.responseText);			
+			post.innerHTML = parsedResponse.post;
 		}
 	};
 	
