@@ -29,7 +29,7 @@ var server = app.listen(deployTarget, () => {
 var input = ["how was the smokeout last night dandan", "im a weed n00b i just smoke out of this", "its actually p gut bc its indiscreet in public", 
 "it looks like im vaping but little do they know im actually blazing", "100 DABS ||| DoNE QUICK }}}}}", "welcome our newest budbomb", 
 "how big are we talking about here", "oh so hes obese or smth", "um, am i missing something here", 
-"is the word 'big' being understood under a doifferent context", "
+"is the word 'big' being understood under a doifferent context",
 "my first assumption when i read that post like an hour ago was that it was typo'd autocorrected 'busy' -> 'big' but i just wanted to talk about dicks",
 "oh ok", "confusing usage of pronouns in that last bit", "ccrrhh stop validating his weird mind", 
 "how come every time i open neko atsume no cats are there , they just leave me a b unch of fish gifts",
