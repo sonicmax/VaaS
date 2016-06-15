@@ -12,7 +12,7 @@
 		
 	// Use VaaS to update vesper_post element with markov chain content
 	var xhr = new XMLHttpRequest();
-	xhr.open('GET', "http://vaas.herokuapp.com/", true);
+	xhr.open('GET', "http://cors-for-chromell.herokuapp.com/" + "http://vaas.herokuapp.com/", true);
 	
 	xhr.onload = () => {
 		if (xhr.status === 200) {
