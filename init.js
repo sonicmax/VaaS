@@ -122,18 +122,17 @@ app.generateNextWord = function() {
 	for (let i = 0, len = input.length - 1; i < len; i++) {
 		let sentenceToCheck = input[i].split(" ");
 		
-			for (let j = 0, len = sentenceToCheck.length; j < len; j++) {
-				var currentWord = sentenceToCheck[j];
-				// create array of words that are likely to follow current word
-				if (wordToCheck === currentWord) {
-					// Make sure that item at index i + 1 exists
-					if (j < len - 1) {
-						let nextWord = sentenceToCheck[j + 1];
-						tempArray.push(nextWord);
-					}
-					else {
-						// reached end of array - do nothing
-					}
+		for (let j = 0, len = sentenceToCheck.length; j < len; j++) {
+			var currentWord = sentenceToCheck[j];
+			// create array of words that are likely to follow current word
+			if (wordToCheck === currentWord) {
+				// Make sure that item at index i + 1 exists
+				if (j < len - 1) {
+					let nextWord = sentenceToCheck[j + 1];
+					tempArray.push(nextWord);
+				}
+				else {
+					// reached end of array - do nothing
 				}
 			}
 		}
