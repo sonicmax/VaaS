@@ -40,8 +40,8 @@ app.init = function() {
 		output.push(currentWord);		
 		currentWord = app.generateNextWord();
 	}
-	
-	app.cachedData.post = output.join(" ");
+		
+	app.cachedData.post = output.join(" ").trim();
 };
 
 app.getPostLength = function() {
