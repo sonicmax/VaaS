@@ -9,7 +9,7 @@
 	
 	var time = dateObject.getHours() + ":" 
 			// Account for single/double digits
-			+ ((dateObject.getMinutes() < 10) ? "0" + dateObject.getMinutes() : dateObject.getMinutes())
+			+ ((dateObject.getMinutes() < 10) ? "0" + dateObject.getMinutes() : dateObject.getMinutes()) + ":"
 			+ ((dateObject.getSeconds() < 10) ? "0" + dateObject.getSeconds() : dateObject.getSeconds());
 			
 	var meridiem = (dateObject.getHours() < 12) ? "AM" : "PM";
