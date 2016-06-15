@@ -145,6 +145,6 @@ app.generateNextWord = function() {
 	}
 	
 	else {
-		return "fhuuump"; // silenced shotgun sound
+		return "";
 	}
 };
