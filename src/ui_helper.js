@@ -17,7 +17,12 @@
 	xhr.onload = () => {
 		if (xhr.status === 200) {
 			var parsedResponse = JSON.parse(xhr.responseText);			
-			post.innerHTML = parsedResponse.post;
+			post.innerHTML = parsedResponse.post + "\n" 
+				+ "---" 
+				+ "\n" 
+				+ "my size 23.5 cm feet" 
+				+ "\n" 
+				+ "they are rather pretty";
 		}
 	};
 	
