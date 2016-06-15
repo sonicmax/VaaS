@@ -109,7 +109,7 @@ app.createArrays = function() {
 	// Create array containing first word of each sentence		
 	for (let i = 0, len = input.length; i < len; i++) {		
 		let sentence = input[i];
-		let firstWord = post.split(" ")[0];		
+		let firstWord = sentence.split(" ")[0];		
 		firstWords.push(firstWord);
 	}
 };
