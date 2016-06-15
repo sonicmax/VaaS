@@ -34,7 +34,7 @@ app.init = function() {
 	var output = [];
 	app.createArrays();
 	// Pick random first word to start with
-	currentWord = firstWords[Math.floor((Math.random() * firstWords.length)];	
+	currentWord = firstWords[Math.floor((Math.random() * firstWords.length))];	
 	
 	for (let i = 0, len = app.getPostLength(); i < len; i++) {
 		output.push(currentWord);		
