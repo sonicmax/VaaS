@@ -92,10 +92,14 @@ app.init = function() {
 	// Pick random first word to start with
 	currentWord = firstWords[Math.floor((Math.random() * firstWords.length))];	
 	
+	console.log(app.getPostLength());
+	
 	for (let i = 0, len = app.getPostLength(); i < len; i++) {
 		output.push(currentWord);		
 		currentWord = app.generateNextWord();
 	}
+		
+	console.log(output);
 		
 	app.cachedData.post = output.join(" ").trim();
 };
