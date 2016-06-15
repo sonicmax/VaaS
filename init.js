@@ -21,7 +21,6 @@ var routes = require("./routes/routes.js")(app);
 var deployTarget = process.env.PORT || LOCAL_HOST;
 
 var server = app.listen(deployTarget, () => {
-	console.log("App listening on " + deployTarget);
 	app.generateMarkovChain();
 });
 
@@ -92,8 +91,6 @@ app.generateMarkovChain = function() {
 	// Pick random first word to start with
 	currentWord = firstWords[Math.floor((Math.random() * firstWords.length))];	
 	
-	console.log(app.getPostLength());
-	
 	for (let i = 0, len = app.getPostLength(); i < len; i++) {
 		output.push(currentWord);		
 		currentWord = app.generateNextWord();
@@ -123,16 +120,21 @@ app.generateNextWord = function() {
 	
 	// Iterate over input array to find instances of current word
 	for (let i = 0, len = input.length - 1; i < len; i++) {
-		let wordToCheck = input[i];
-		// create array of words that are likely to follow current word
-		if (wordToCheck === currentWord) {
-			// Make sure that item at index i + 1 exists
-			if (i < len - 1) {
-				let nextWord = input[i + 1];
-				tempArray.push(nextWord);
-			}
-			else {
-				// reached end of array - do nothing
+		let sentenceToCheck = input[i].split(" ");
+		
+			for (let j = 0, len = sentenceToCheck.length; j < len; j++) {
+				var currentWord = sentenceToCheck[j];
+				// create array of words that are likely to follow current word
+				if (wordToCheck === currentWord) {
+					// Make sure that item at index i + 1 exists
+					if (j < len - 1) {
+						let nextWord = sentenceToCheck[j + 1];
+						tempArray.push(nextWord);
+					}
+					else {
+						// reached end of array - do nothing
+					}
+				}
 			}
 		}
 	}
