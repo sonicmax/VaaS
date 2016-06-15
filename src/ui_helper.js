@@ -22,15 +22,8 @@
 	
 	xhr.onload = () => {
 		if (xhr.status === 200) {
-			const lineBreak = "<br>";
 			var parsedResponse = JSON.parse(xhr.responseText);			
-			post.innerHTML = parsedResponse.post 
-				+ lineBreak
-				+ "---" 
-				+ lineBreak
-				+ "my size 23.5 cm feet" 
-				+ lineBreak
-				+ "they are rather pretty";
+			post.innerHTML = parsedResponse.post;
 		}
 	};
 	
