@@ -1,6 +1,7 @@
 (function() {
 	var timestamp = document.getElementById("timestamp");
-	var post = document.getElementById('vesper_post');
+	var post = document.getElementById("vesper_post");
+	var refreshButton = document.getElementById("refresh");
 	
 	// Generate timestamp for post, formatted like this: M/DD/YYYY HH:MM:SS AM/PM
 	var dateObject = new Date();
@@ -16,17 +17,26 @@
 	
 	timestamp.innerHTML = date + " " + time + " " + meridiem;
 		
-	// Use VaaS to update vesper_post element with markov chain content
-	var xhr = new XMLHttpRequest();
-	xhr.open('GET', "http://cors-for-chromell.herokuapp.com/" + "http://vaas.herokuapp.com/", true);
-	
-	xhr.onload = () => {
-		if (xhr.status === 200) {
-			var parsedResponse = JSON.parse(xhr.responseText);			
-			post.innerHTML = parsedResponse.post;
-		}
+	// Method which handles API interaction
+	var updatePost = function() {
+		// Use VaaS to update vesper_post element with markov chain content
+		var xhr = new XMLHttpRequest();
+		xhr.open('GET', "http://cors-for-chromell.herokuapp.com/" + "http://vaas.herokuapp.com/", true);
+		
+		xhr.onload = () => {
+			if (xhr.status === 200) {
+				var parsedResponse = JSON.parse(xhr.responseText);			
+				post.innerHTML = parsedResponse.post;
+			}
+		};
+		
+		xhr.send();
 	};
 	
-	xhr.send();
+	updatePost();
 	
+	refreshButton.addEventListener('click', (evt) => {
+			updatePost();
+	});
+		
 })();
