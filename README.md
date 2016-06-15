@@ -1,4 +1,10 @@
 # VaaS
 (Vesper as a service)
 
-http://sonicmax.github.io/VaaS
+Demo: http://sonicmax.github.io/VaaS
+
+API: http://vaas.herokuapp.com/
+
+Sample response:
+
+<pre>{ "post": "fhuuump" }</pre>
