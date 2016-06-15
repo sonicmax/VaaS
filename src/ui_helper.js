@@ -15,7 +15,7 @@
 	xhr.open('GET', "http://vaas.herokuapp.com/", true);
 	
 	xhr.onload = (xhr.responseText) => {
-		if (this.status == 200) {
+		if (xhr.status === 200) {
 			var parsedResponse = JSON.parse(xhr.responseText);			
 			post.innerHTML = parsedResponse.post;
 		}
