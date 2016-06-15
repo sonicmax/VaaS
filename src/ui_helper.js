@@ -12,13 +12,11 @@
 		
 	// Use VaaS to update vesper_post element with markov chain content
 	var xhr = new XMLHttpRequest();
-	var url = "http://vaas.herokuapp.com/";
-	
-	xhr.open('GET', url, true);
+	xhr.open('GET', "http://vaas.herokuapp.com/", true);
 	
 	xhr.onload = (response) => {
 		if (this.status == 200) {
-			message.innerHTML = response.post;
+			post.innerHTML = response.post;
 		}
 	};
 	
