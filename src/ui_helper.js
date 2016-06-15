@@ -4,9 +4,9 @@
 	
 	// Generate timestamp for post, formatted like this: M/DD/YYYY HH:MM:SS AM/PM
 	var dateObject = new Date();
-	var date = (dateObject.getMonth() + 1) + "/" + dateObject.getDate() + "/" + date.getFullYear();
-	var time = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
-	var meridiem = (date.getHours() < 12) ? "AM" : "PM";
+	var date = (dateObject.getMonth() + 1) + "/" + dateObject.getDate() + "/" + dateObject.getFullYear();
+	var time = dateObject.getHours() + ":" + dateObject.getMinutes() + ":" + dateObject.getSeconds();
+	var meridiem = (dateObject.getHours() < 12) ? "AM" : "PM";
 	
 	timestamp.innerHTML = date + " " + time + " " + meridiem;
 		
