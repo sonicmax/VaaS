@@ -22,7 +22,7 @@ var deployTarget = process.env.PORT || LOCAL_HOST;
 
 var server = app.listen(deployTarget, () => {
 	console.log("App listening on " + deployTarget);
-	app.init();
+	app.generateMarkovChain();
 });
 
 // NOTE TO SELF: NEVER DO THIS AGAIN. OMG.
@@ -86,7 +86,7 @@ like weddge of cheese ??", "keep it cheesy", "something about the prospect of li
 var firstWords = [];
 var currentWord = "";
 
-app.init = function() {
+app.generateMarkovChain = function() {
 	var output = [];
 	app.createArrays();
 	// Pick random first word to start with
