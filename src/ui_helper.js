@@ -7,7 +7,7 @@
 	var date = (dateObject.getMonth() + 1) + "/" + dateObject.getDate() + "/" + dateObject.getFullYear();
 	var time = dateObject.getHours() + ":" + dateObject.getMinutes() + ":" 
 			// Account for single/double digits
-			+ ((dateObject.getSeconds() < 10) ? "0" + dateObject.getSeconds() : dateObject.getSeconds();
+			+ ((dateObject.getSeconds() < 10) ? "0" + dateObject.getSeconds() : dateObject.getSeconds());
 	var meridiem = (dateObject.getHours() < 12) ? "AM" : "PM";
 	
 	timestamp.innerHTML = date + " " + time + " " + meridiem;
