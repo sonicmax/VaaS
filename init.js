@@ -41,7 +41,7 @@ app.init = function() {
 		currentWord = app.generateNextWord();
 	}
 	
-	cachedData.post = output.join(" ");
+	app.cachedData.post = output.join(" ");
 };
 
 app.getPostLength = function() {
