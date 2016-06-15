@@ -691,3 +691,8 @@ a.quoter-button:visited {
 a.jump-arrow {
   text-decoration: none;
 }
+
+.anchor {
+	cursor: pointer;
+	text-decoration: underline;		
+}
