@@ -79,9 +79,7 @@ never stop improving", "mad men but set in the 00s and one of their clients is L
 "what is a wedge \
 \
 like weddge of cheese ??", "keep it cheesy", "something about the prospect of living 10 minutes away from jngy just gave me the willies",
-"LMAO", "
-
-"her name . \"sayaka miki\" its so perfect, \"sayaka miki\"", "LMAO i cant stop sayign 'sayaka miki' and laughign", 
+"LMAO", "her name . \"sayaka miki\" its so perfect, \"sayaka miki\"", "LMAO i cant stop sayign 'sayaka miki' and laughign", 
 "compared to all the other madokas sayaka has by faer the best and funniest name", "my mom says im cool..", 
 "she does.. im the coolest kid on the block she sayas", "she told me not to listen to bullies bbeacause theyre just jhealous of how cool i am"];
 
