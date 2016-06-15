@@ -14,8 +14,9 @@
 	var xhr = new XMLHttpRequest();
 	xhr.open('GET', "http://vaas.herokuapp.com/", true);
 	
-	xhr.onload = (response) => {
+	xhr.onload = (xhr.response) => {
 		if (this.status == 200) {
+			console.log(xhr.response);
 			post.innerHTML = response.post;
 		}
 	};
