@@ -16,12 +16,14 @@
 	
 	xhr.onload = () => {
 		if (xhr.status === 200) {
+			const lineBreak = "<br>";
 			var parsedResponse = JSON.parse(xhr.responseText);			
-			post.innerHTML = parsedResponse.post + "\n" 
+			post.innerHTML = parsedResponse.post 
+				+ lineBreak
 				+ "---" 
-				+ "\n" 
+				+ lineBreak
 				+ "my size 23.5 cm feet" 
-				+ "\n" 
+				+ lineBreak
 				+ "they are rather pretty";
 		}
 	};
