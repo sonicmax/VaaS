@@ -123,7 +123,7 @@ app.generateNextWord = function() {
 		let sentenceToCheck = input[i].split(" ");
 		
 		for (let j = 0, len = sentenceToCheck.length; j < len; j++) {
-			var currentWord = sentenceToCheck[j];
+			var wordToCheck = sentenceToCheck[j];
 			// create array of words that are likely to follow current word
 			if (wordToCheck === currentWord) {
 				// Make sure that item at index i + 1 exists
@@ -140,7 +140,7 @@ app.generateNextWord = function() {
 	
 	let rnd = Math.floor((Math.random() * tempArray.length));
 	
-	if (tempArray[rnd]) {							
+	if (tempArray[rnd]) {					
 		return tempArray[rnd];
 	}
 	
