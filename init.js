@@ -223,7 +223,9 @@ app.generateNextWord = function() {
 	if (tempArray[rnd]) {					
 		return tempArray[rnd];
 	}
+	
 	else {
-		// Do nothing
+		// Kludgy fix - return empty string.
+		return "";
 	}
 };
