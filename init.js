@@ -53,18 +53,22 @@ client.on("connect", () => {
 
 app.generateMarkovChain = function() {
 	var output = [];
+	
 	app.createArrays();
+	
 	// Pick random first word to start with
 	currentWord = firstWords[Math.floor((Math.random() * firstWords.length))];	
 	
 	for (let i = 0, len = app.getPostLength(); i < len; i++) {
 		output.push(currentWord);		
+		
 		if (app.generateNextWord()) {
 			currentWord = app.generateNextWord();
 		}
+		else {
+			currentWord = "";
+		}
 	}
-		
-	console.log(output);
 		
 	app.cachedData.post = output.join(" ").trim();
 };
