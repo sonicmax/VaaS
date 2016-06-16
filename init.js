@@ -10,12 +10,13 @@ var fs = require("fs");
 var express = require("express");
 var bodyParser = require("body-parser");
 var request = require('request');
+var redisClient = require('redis').createClient(process.env.REDIS_URL);
 
 var app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.cachedData = { "post": "" }; // Basic format for JSON response
- 
+
 var routes = require("./routes/routes.js")(app);
 
 var deployTarget = process.env.PORT || LOCAL_HOST;
@@ -24,7 +25,6 @@ var server = app.listen(deployTarget, () => {
 	app.generateMarkovChain();
 });
 
-// NOTE TO SELF: NEVER DO THIS AGAIN. OMG.
 var input = ["how was the smokeout last night dandan", "im a weed n00b i just smoke out of this", "its actually p gut bc its indiscreet in public", 
 "it looks like im vaping but little do they know im actually blazing", "100 DABS ||| DoNE QUICK }}}}}", "welcome our newest budbomb", 
 "how big are we talking about here", "oh so hes obese or smth", "um, am i missing something here", 
@@ -161,6 +161,18 @@ like weddge of cheese ??", "keep it cheesy", "something about the prospect of li
 "can cats' whiskers be trimmed", 
 "i want to stop spending a bunch of cash on weed and instead put that into a kitty so i can quit weed and nicotine altogether", 
 "um ownership o/ this is illegal im not posting a video of myself firing it", "Just bought a silenced shotgun (pics)"];
+
+redisClient.on("connect", () => {
+    if (!redisClient.get("quotes")) {
+			console.log("couldn't find quotes on redis");
+			redisClient.rpush.apply(redisClient, ["quotes"].concat(input).concat(() => {
+				console.log("Input stored to redis");
+			});
+		}
+		else {
+			console.log("redis already set up");
+		}
+});
 
 var firstWords = [];
 var currentWord = "";
