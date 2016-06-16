@@ -10,7 +10,7 @@ var fs = require("fs");
 var express = require("express");
 var bodyParser = require("body-parser");
 var request = require('request');
-var redisClient = require('redis').createClient(process.env.REDIS_URL);
+var client = require('redis').createClient(process.env.REDIS_URL);
 
 var app = express();
 app.use(bodyParser.json());
@@ -162,13 +162,13 @@ like weddge of cheese ??", "keep it cheesy", "something about the prospect of li
 "i want to stop spending a bunch of cash on weed and instead put that into a kitty so i can quit weed and nicotine altogether", 
 "um ownership o/ this is illegal im not posting a video of myself firing it", "Just bought a silenced shotgun (pics)"];
 
-redisClient.on("connect", () => {
+client.on("connect", () => {
 		
 		client.lrange('quotes', 0, -1, (error, items) => {
 			
 			if (error) {
 				console.log("couldn't find quotes on redis");
-				redisClient.rpush.apply(redisClient, ["quotes"].concat(input).concat(() => { console.log("Input stored to redis") }));
+				client.rpush.apply(client, ["quotes"].concat(input).concat(() => { console.log("Input stored to redis") }));
 			}
 			
 			else {
