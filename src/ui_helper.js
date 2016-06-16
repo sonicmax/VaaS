@@ -3,7 +3,7 @@
 	var post = document.getElementById("vesper_post");
 	var refreshButton = document.getElementById("refresh");
 	
-	// Self-executing function which generates timestamp for post, formatted as: M/DD/YYYY HH:MM:SS
+	// Function which generates timestamp for post, formatted as: M/DD/YYYY HH:MM:SS
 	var updateTimestamp = function() {
 		var dateObject = new Date();
 		
@@ -17,11 +17,10 @@
 		var meridiem = (dateObject.getHours() < 12) ? "AM" : "PM";
 		
 		timestamp.innerHTML = date + " " + time + " " + meridiem;
-		
-	}();
+	};
 
 		
-	// Self-executing function which handles API interaction
+	// Function which handles API interaction
 	var updatePost = function() {
 		// Use VaaS to update vesper_post element with markov chain content
 		var xhr = new XMLHttpRequest();
@@ -35,8 +34,11 @@
 		};
 		
 		xhr.send();
-		
-	}();
+	};
+	
+	// Update UI
+	updateTimestamp();
+	updatePost();
 	
 	refreshButton.addEventListener('click', (evt) => {
 			updateTimestamp();
