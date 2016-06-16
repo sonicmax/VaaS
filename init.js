@@ -165,9 +165,7 @@ like weddge of cheese ??", "keep it cheesy", "something about the prospect of li
 redisClient.on("connect", () => {
     if (!redisClient.get("quotes")) {
 			console.log("couldn't find quotes on redis");
-			redisClient.rpush.apply(redisClient, ["quotes"].concat(input).concat(() => {
-				console.log("Input stored to redis");
-			});
+			redisClient.rpush.apply(redisClient, ["quotes"].concat(input).concat(() => { console.log("Input stored to redis") }));			
 		}
 		else {
 			console.log("redis already set up");
