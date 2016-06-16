@@ -47,7 +47,7 @@
 	
 	var clickDebouncer = function(evt){
 		clearTimeout(timeoutId);
-		timeoutId = setTimeout(updateUi, 100);
+		timeoutId = setTimeout(updateUi, 150);
 	};
 	
 	// Use debouncer here to prevent people from hammering my precious server
