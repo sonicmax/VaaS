@@ -35,15 +35,22 @@
 		
 		xhr.send();
 	};
+		
+	var updateUi = function() {
+		updateTimestamp();
+		updatePost();
+	};
 	
-	// Update UI
-	updateTimestamp();
-	updatePost();
+	updateUi();
 	
-	// Add listener for refresh anchor
-	refreshButton.addEventListener('click', (evt) => {
-			updateTimestamp();
-			updatePost();
-	});
+	var timeoutId;
+	
+	var clickDebouncer = function(evt){
+		clearTimeout(timeoutId);
+		timeoutId = setTimeout(updateUi, 100);
+	};
+	
+	// Use debouncer here to prevent people from hammering my precious server
+	refreshButton.addEventListener('click', clickDebouncer);
 		
 })();
