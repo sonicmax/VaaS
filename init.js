@@ -36,6 +36,7 @@ client.on("connect", () => {
 				throw error;
 			}		
 			else {
+				console.log(items);
 				input = items;
 				app.generateMarkovChain();
 			}		
