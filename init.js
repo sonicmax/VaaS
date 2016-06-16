@@ -2,9 +2,14 @@
  *	Initial setup
  */
 
-"use strict"
+"use strict" // Otherwise we're stuck with ES5
 
 const LOCAL_HOST = 3000;
+
+// Variables required for Markov Chain generation
+var input;
+var firstWords = [];
+var currentWord = "";
 
 // Set up modules
 var express = require("express");
@@ -20,7 +25,7 @@ app.cachedData = { "post": "" }; // Basic format for JSON response
 // Set up routing for API
 var routes = require("./routes/routes.js")(app);
 
-// Generate content as soon as app is running
+// Set up server
 var server = app.listen(process.env.PORT || LOCAL_HOST, () => {
 	console.log("vesperbot is sentient and ready to shitpost");
 });
@@ -64,7 +69,6 @@ app.generateMarkovChain = function() {
 	app.cachedData.post = output.join(" ").trim();
 };
 
-// TODO: Improve this method
 app.getPostLength = function() {
 	return input[Math.floor((Math.random() * input.length))].length;
 };
@@ -79,14 +83,13 @@ app.createArrays = function() {
 };
 
 app.generateNextWord = function() {
-	let tempArray = [];
-	
+	var tempArray = [];
 	// Iterate over input array to find instances of current word
 	for (let i = 0, len = input.length - 1; i < len; i++) {
 		let sentenceToCheck = input[i].split(" ");
 		
 		for (let j = 0, len = sentenceToCheck.length; j < len; j++) {
-			var wordToCheck = sentenceToCheck[j];
+			let wordToCheck = sentenceToCheck[j];
 			// create array of words that are likely to follow current word
 			if (wordToCheck === currentWord) {
 				// Make sure that item at index i + 1 exists
