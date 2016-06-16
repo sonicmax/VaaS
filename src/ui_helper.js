@@ -40,6 +40,7 @@
 	updateTimestamp();
 	updatePost();
 	
+	// Add listener for refresh anchor
 	refreshButton.addEventListener('click', (evt) => {
 			updateTimestamp();
 			updatePost();
