@@ -10,7 +10,6 @@ const LOCAL_HOST = 3000;
 var express = require("express");
 var bodyParser = require("body-parser");
 var client = require('redis').createClient(process.env.REDIS_URL);
-var routes = require("./routes/routes.js")(app);
 
 // Set up app
 var app = express();
@@ -18,9 +17,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.cachedData = { "post": "" }; // Basic format for JSON response
 
-var deployTarget = process.env.PORT || LOCAL_HOST; // Allows for live or local testing
+// Set up routing for API
+var routes = require("./routes/routes.js")(app);
 
-var server = app.listen(deployTarget, () => {	
+// Generate content as soon as app is running
+var server = app.listen(process.env.PORT || LOCAL_HOST, () => {	
 	app.generateMarkovChain();
 });
 
