@@ -21,8 +21,8 @@ app.cachedData = { "post": "" }; // Basic format for JSON response
 var routes = require("./routes/routes.js")(app);
 
 // Generate content as soon as app is running
-var server = app.listen(process.env.PORT || LOCAL_HOST, () => {	
-	app.generateMarkovChain();
+var server = app.listen(process.env.PORT || LOCAL_HOST, () => {
+	console.log("vesperbot is sentient and ready to shitpost");
 });
 
 
@@ -37,6 +37,7 @@ client.on("connect", () => {
 			}		
 			else {
 				input = items;
+				app.generateMarkovChain();
 			}		
 		});				
 });
