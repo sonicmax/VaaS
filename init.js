@@ -163,13 +163,20 @@ like weddge of cheese ??", "keep it cheesy", "something about the prospect of li
 "um ownership o/ this is illegal im not posting a video of myself firing it", "Just bought a silenced shotgun (pics)"];
 
 redisClient.on("connect", () => {
-    if (!redisClient.get("quotes")) {
-			console.log("couldn't find quotes on redis");
-			redisClient.rpush.apply(redisClient, ["quotes"].concat(input).concat(() => { console.log("Input stored to redis") }));			
-		}
-		else {
-			console.log("redis already set up");
-		}
+		
+		client.lrange('quotes', 0, -1, (error, items) => {
+			
+			if (error) {
+				console.log("couldn't find quotes on redis");
+				redisClient.rpush.apply(redisClient, ["quotes"].concat(input).concat(() => { console.log("Input stored to redis") }));
+			}
+			
+			else {
+				console.log("redis already set up");
+				console.log(items.length);
+			}
+			
+		});				
 });
 
 var firstWords = [];
