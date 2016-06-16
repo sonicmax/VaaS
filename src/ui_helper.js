@@ -3,21 +3,25 @@
 	var post = document.getElementById("vesper_post");
 	var refreshButton = document.getElementById("refresh");
 	
-	// Generate timestamp for post, formatted like this: M/DD/YYYY HH:MM:SS AM/PM
-	var dateObject = new Date();
-	
-	var date = (dateObject.getMonth() + 1) + "/" + dateObject.getDate() + "/" + dateObject.getFullYear();
-	
-	var time = dateObject.getHours() + ":" 
-			// Account for single/double digits
-			+ ((dateObject.getMinutes() < 10) ? "0" + dateObject.getMinutes() : dateObject.getMinutes()) + ":"
-			+ ((dateObject.getSeconds() < 10) ? "0" + dateObject.getSeconds() : dateObject.getSeconds());
-			
-	var meridiem = (dateObject.getHours() < 12) ? "AM" : "PM";
-	
-	timestamp.innerHTML = date + " " + time + " " + meridiem;
+	// Self-executing function which generates timestamp for post, formatted as: M/DD/YYYY HH:MM:SS
+	var updateTimestamp = function() {
+		var dateObject = new Date();
 		
-	// Method which handles API interaction
+		var date = (dateObject.getMonth() + 1) + "/" + dateObject.getDate() + "/" + dateObject.getFullYear();
+		
+		var time = dateObject.getHours() + ":" 
+				// Account for single/double digits
+				+ ((dateObject.getMinutes() < 10) ? "0" + dateObject.getMinutes() : dateObject.getMinutes()) + ":"
+				+ ((dateObject.getSeconds() < 10) ? "0" + dateObject.getSeconds() : dateObject.getSeconds());
+				
+		var meridiem = (dateObject.getHours() < 12) ? "AM" : "PM";
+		
+		timestamp.innerHTML = date + " " + time + " " + meridiem;
+		
+	}();
+
+		
+	// Self-executing function which handles API interaction
 	var updatePost = function() {
 		// Use VaaS to update vesper_post element with markov chain content
 		var xhr = new XMLHttpRequest();
@@ -31,11 +35,11 @@
 		};
 		
 		xhr.send();
-	};
-	
-	updatePost();
+		
+	}();
 	
 	refreshButton.addEventListener('click', (evt) => {
+			updateTimestamp();
 			updatePost();
 	});
 		
