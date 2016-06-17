@@ -13,6 +13,7 @@ var currentWord = "";
 
 // Set up modules
 var express = require("express");
+var request = require("request");
 var bodyParser = require("body-parser");
 var client = require('redis').createClient(process.env.REDIS_URL);
 
