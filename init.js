@@ -123,7 +123,7 @@ app.generateNextWord = function() {
 
 app.addNewQuotes = function(url) {
 	
-		request.post("GET", url, ((response) => {
+		request.get(url, ((response) => {
 			
 				var quotes = response.split("\n").filter((line) => { return line });
 				
