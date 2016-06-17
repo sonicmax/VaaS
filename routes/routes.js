@@ -10,6 +10,7 @@ var appRouter = function(app) {
 	});
 	
 	app.post("/pastebin", (req, res) => {
+		// Obviously not just gonna let any old yahoo in here...
 		if (req.query.token != process.env.TOKEN) {
 			return;
 		}
