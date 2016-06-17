@@ -18,8 +18,8 @@ var appRouter = function(app) {
 			app.ajax("GET", req.query.url, ((response) => {	
 				var quotes = response.split("\n").filter((line) => { return line });
 				app.addNewQuotes(quotes);
-			});		
-		});	
+			}));		
+		};
 	});
 	
 };
