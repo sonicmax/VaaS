@@ -123,22 +123,34 @@ app.generateNextWord = function() {
 
 app.addNewQuotes = function(url) {
 	
-		request.get(url, ((error, response, body) => {
-				if (!error && response.statusCode == 200) {
-					let quotes = body.split("\n").filter((line) => line && line.indexOf("&lt;") == -1 && line.charAt(0) !== "<");
-
-					
-					client.lrange("quotes", 0, -1, (error, items) => {
-						if (error) {
-							throw error;
-						}
-						else {
-							// Update local & disk cache
-							input = input.concat(quotes);
-							client.rpush.apply(client, ["quotes"].concat(quotes).concat(() => { console.log("Quotes stored to redis") }));
-						}
-					});	
+	request.get(url, ((error, response, body) => {
+			if (!error && response.statusCode == 200) {			
+				let quotes = body.split("\n").filter((line) => line && line.indexOf("&lt;") == -1 && line.charAt(0) !== "<");
+				// TODO: For some reason this just doesn't work. I'm gonna try iterating over the quotes array manually to remove empty linebreaks
+				var stupidQuoteFixArray = [];
+				for (var i = 0, len = quotes.length; i < len; i++) {
+					var quote = quotes[i];
+					if (quote) {
+						stupidQuoteFixArray.push(quote);
+					}
+				}
 				
-				}	
-		}));
+				if (stupidQuoteFixArray.length > 0) {
+					quotes = stupidQuoteFixArray;
+				}
+				
+				
+				client.lrange("quotes", 0, -1, (error, items) => {
+					if (error) {
+						throw error;
+					}
+					else {
+						// Update local & disk cache
+						input = input.concat(quotes);
+						client.rpush.apply(client, ["quotes"].concat(quotes).concat(() => { console.log("Quotes stored to redis") }));
+					}
+				});	
+			
+			}	
+	}));
 };
