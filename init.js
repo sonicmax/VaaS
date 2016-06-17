@@ -121,8 +121,8 @@ app.generateNextWord = function() {
 	}
 };
 
+// Method which allows us to add new quotes from pastebin raw links
 app.addNewQuotes = function(url) {
-	
 	request.get(url, ((error, response, body) => {
 		if (!error && response.statusCode == 200) {
 			// Ignore blank lines, 
@@ -140,5 +140,6 @@ app.addNewQuotes = function(url) {
 			});	
 		
 		}
+		
 	}));
 };
