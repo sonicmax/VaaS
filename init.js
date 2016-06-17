@@ -123,20 +123,21 @@ app.generateNextWord = function() {
 
 app.addNewQuotes = function(url) {
 	
-		request.get(url, ((response) => {
-			
-				var quotes = response.split("\n").filter((line) => { return line });
+		request.get(url, ((error, response, body) => {
+				if (!error && response.statusCode == 200) {
+					var quotes = body.split("\n").filter((line) => { return line });
+					
+					client.lrange("quotes", 0, -1, (error, items) => {
+						if (error) {
+							throw error;
+						}
+						else {
+							// Update local & disk cache
+							input = input.concat(quotes);
+							client.rpush.apply(client, ["quotes"].concat(quotes).concat(() => { console.log("Quotes stored to redis") }));
+						}
+					});	
 				
-				client.lrange("quotes", 0, -1, (error, items) => {
-					if (error) {
-						throw error;
-					}
-					else {
-						// Update local & disk cache
-						input = input.concat(quotes);
-						client.rpush.apply(client, ["quotes"].concat(quotes).concat(() => { console.log("Quotes stored to redis") }));
-					}
-				});	
-		
+				}	
 		}));
 };
