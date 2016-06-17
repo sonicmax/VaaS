@@ -16,6 +16,7 @@ var appRouter = function(app) {
 		
 		else {
 			app.addNewQuotes(req.query.url);
+			return;
 		};
 	});
 	
