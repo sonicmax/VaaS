@@ -7,7 +7,7 @@
 const LOCAL_HOST = 3000;
 
 // Variables required for Markov Chain generation
-var input;
+var input = [];
 var firstWords = [];
 var currentWord = "";
 
@@ -48,7 +48,27 @@ client.on("connect", () => {
 });
 
 
-/* app helper methods */
+/* app methods */
+
+app.ajax = function(method, url, callback) {
+	var xhr = new XMLHttpRequest();
+	xhr.requestURL = url;
+	xhr.open(method, url, true);
+	
+	xhr.onload = () => {
+		if (xhr.status === 200) {		
+			callback(xhr.responseText);
+			xhr = null;
+		}
+		
+		else {
+			callback();
+			xhr = null;
+		}		
+	};
+	
+	xhr.send();
+};
 
 app.generateMarkovChain = function() {
 	var output = [];
@@ -118,4 +138,18 @@ app.generateNextWord = function() {
 	else {		
 		return;
 	}
+};
+
+app.addNewQuotes = function(quotes) {
+	
+		client.lrange("quotes", 0, -1, (error, items) => {
+			if (error) {
+				throw error;
+			}
+			else {
+				// Update local & disk cache
+				input = input.concat(quotes);
+				client.rpush.apply(client, ["quotes"].concat(quotes).concat(() => { console.log("Quotes stored to redis") }));
+			}
+		});		
 };
