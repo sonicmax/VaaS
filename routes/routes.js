@@ -15,10 +15,7 @@ var appRouter = function(app) {
 		}
 		
 		else {
-			app.ajax("GET", req.query.url, ((response) => {	
-				var quotes = response.split("\n").filter((line) => { return line });
-				app.addNewQuotes(quotes);
-			}));		
+			app.addNewQuotes(req.query.url);
 		};
 	});
 	
