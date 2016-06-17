@@ -125,7 +125,8 @@ app.addNewQuotes = function(url) {
 	
 		request.get(url, ((error, response, body) => {
 				if (!error && response.statusCode == 200) {
-					var quotes = body.split("\n").filter((line) => line !== ""); // Filter out blank lines from raw pastebin
+					let quotes = body.split("\n").filter((line) => line && line.indexOf("&lt;") == -1 && line.charAt(0) !== "<");
+
 					
 					client.lrange("quotes", 0, -1, (error, items) => {
 						if (error) {
