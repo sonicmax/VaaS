@@ -22,6 +22,7 @@ var app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.cachedData = { "post": "" }; // Basic format for JSON response
+app.loggedIn = false; // Indicates whether app has login cookie for ETI
 
 // Set up routing for API
 var routes = require("./routes/routes.js")(app);
@@ -32,7 +33,9 @@ var server = app.listen(process.env.PORT || LOCAL_HOST, () => {
 });
 
 
-/* Redis handler */
+/**
+	*		Redis db handler 
+	*/
 
 client.on("connect", () => {
 		// Attempt to get "quotes" array from Redis
@@ -44,12 +47,15 @@ client.on("connect", () => {
 			else {
 				input = items;
 				app.generateMarkovChain();
+				app.loginToBlueSite(
 			}		
 		});				
 });
 
 
-/* app methods */
+/**
+  * Markov chain methods 
+	*/
 
 app.generateMarkovChain = function() {
 	var output = [];
@@ -121,7 +127,11 @@ app.generateNextWord = function() {
 	}
 };
 
-// Method which allows us to add new quotes from pastebin raw links
+
+/**
+  *		Method which allows us to add new quotes from pastebin raw links
+  */
+	
 app.addNewQuotes = function(url) {
 	request.get(url, ((error, response, body) => {
 		if (!error && response.statusCode == 200) {
@@ -142,4 +152,33 @@ app.addNewQuotes = function(url) {
 		}
 		
 	}));
+};
+
+/**
+  *		Log into ETI using environment vars as credentials
+  */
+
+app.loginToBlueSite = function() {
+	const LOGIN_URL = "https://endoftheinter.net/";
+	const formData = { b: process.env.USERNAME, p: process.env.PASSWORD };
+	
+	request.post({
+		
+		headers: {"content-type": "application/x-www-form-urlencoded"},
+		url: LOGIN_URL,
+		form: formData,
+		jar: app.cookieJar
+		
+	}, (error, response, body) => {
+				
+			// After successful login, ETI will attempt to redirect you to homepage
+			if (!error && response.statusCode === 302) {									
+					app.cookieJar.setCookie("userid=" + process.env.USER_ID);
+					app.loggedIn = true;					
+			}
+			
+			else {
+				console.log("Login failed.");				
+			}
+	});
 };
