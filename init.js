@@ -211,10 +211,10 @@ app.getTopicList = function() {
 				var anchors = $('td.oh div.fl a').get();
 				console.log("anchors length: " + anchors.length);
 				
-				var anchor = topics[Math.floor(Math.random() * 49) + 1];
+				var anchor = $('td.oh div.fl a').get(Math.floor(Math.random() * 49) + 1);
 				console.log("anchor: " + anchor.attr('href'));
 				
-				var href = topic.attr('href');							
+				var href = anchor.attr('href');			
 				
 				app.getMessageList(href);
 				
