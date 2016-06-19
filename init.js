@@ -205,10 +205,10 @@ app.getTopicList = function() {
 		if (!error && response.statusCode === 200) {
 			
 			var $ = cheerio.load(response);
-			var topicList = $('.grid tbody tr');
+			var topicList = $('.grid tbody tr').get();
 			// Pick random topic to pester. The -1 / +1 here looks goofy, but is required to make sure we don't get 0 as output
-			var target = topicList[Math.floor((Math.random() * topicList.length - 1)) + 1];
-			var topicHref = target('td a')[0].attr('href');
+			var target = topicList.get[Math.floor((Math.random() * topicList.length - 1)) + 1];
+			var topicHref = target('td a').get[0].attr('href');
 			
 			console.log("Scraped href: " + topicHref);
 			
