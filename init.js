@@ -257,7 +257,7 @@ app.getMessageList = function(callback) {
 	
 	request({
 		
-		url: url,
+		url: "https://boards.endoftheinter.net/showmessages.php?topic=" + currentTopicId,
 		jar: app.cookieJar
 		
 	}, (error, response, body) => {
