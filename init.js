@@ -206,11 +206,21 @@ app.getTopicList = function() {
 		if (!error && response.statusCode === 200) {
 			
 			try {
+				// Find random topic to pester
 				var $ = cheerio.load(body);
-				var topicAnchors = $('td.oh div.fl a').get();
-				console.log("number of anchors found:", topicAnchors.length);
-				// Pick random topic to pester
-				var href = topicAnchors.get(Math.floor(Math.random() * 50) + 1).attr('href');
+				var randomTopic = Math.floor(Math.random() * 50) + 1;
+				var href;
+				
+				// I don't understand the cheerio library. This is ridiculous. I don't care.
+				$('td.oh div.fl a').each((index, element) => {
+					
+					if (index === randomTopic) {
+						href = element.attr('href');
+						return false;
+					}
+					
+				});
+				
 				console.log("href: " + href);
 				
 				app.getMessageList(href);
