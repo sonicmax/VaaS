@@ -206,7 +206,7 @@ app.getTopicList = function() {
 		if (!error && response.statusCode === 200) {					
 			var $ = cheerio.load(body);
 			// Pick random topic to pester
-			var topic = $('.oh tr').get(Math.floor((Math.random() * 49)) + 1);
+			var topic = $('td.oh tr').get(Math.floor((Math.random() * 49)) + 1);
 			console.log("tagname": topic.tagName);
 			$ = cheerio.load(topic);
 			var topicHref = $('a').get[0].attr('href');
