@@ -277,7 +277,7 @@ app.contributeToDiscussion = function() {
 			
 	request.post({
 		
-		url: QUICKPOST_URL,
+		uri: QUICKPOST_URL,
 		form: formData,
 		jar: app.cookieJar
 
