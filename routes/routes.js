@@ -19,8 +19,10 @@ var appRouter = function(app) {
 		
 		else {
 			app.initBot();
+			
 			console.log("Redirecting request to", app.currentTopicId);
-			res.writeHead(301, {
+			
+			res.writeHead(302, {
 					Location: "https://boards.endoftheinter.net/showmessages.php?topic=" + app.currentTopicId			
 			});
 			
