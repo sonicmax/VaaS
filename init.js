@@ -11,8 +11,7 @@ var input = [];
 var firstWords = [];
 var currentWord = "";
 
-// Variables required for bottom
-var currentTopicId;
+// Variables required for bot
 var currentToken;
 
 // Set up modules
@@ -28,7 +27,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.cookieJar = request.jar(); // Global cookie store
 app.cachedData = { "post": "" }; // Basic format for JSON response
-app.loggedIn = false; // Indicates whether app has login cookie for ETI
+app.currentTopicId; // Current topic that bot is posting in
 
 // Set up routing for API
 var routes = require("./routes/routes.js")(app);
@@ -217,8 +216,8 @@ app.getTopicList = function() {
 					var topicNumberRegex = href.match(/(topic=)([0-9]+)/);
 					
 					if (href !== "https:" && topicNumberRegex) {
-						currentTopicId = topicNumberRegex[2];
-						console.log('current topic id:', currentTopicId);
+						app.currentTopicId = topicNumberRegex[2];
+						console.log('current topic id:', app.currentTopicId);
 						return false;
 					}
 					
@@ -273,7 +272,7 @@ app.contributeToDiscussion = function() {
 	const QUICKPOST_URL = "https://boards.endoftheinter.net/async-post.php";
 	
 	var formData = {};
-			formData.topic = currentTopicId;
+			formData.topic = app.currentTopicId;
 			formData.h = currentToken;
 			formData.message = app.generateMarkovChain(true); // Pass true to get return value immediately
 			
@@ -286,12 +285,8 @@ app.contributeToDiscussion = function() {
 	}, (error, response, body) => {
 		
 			if (!error && response.statusCode === 200) {
-				// Redirect user to whatever bongers said
-				response.writeHead(301, {
-						Location: "http://boards.endoftheinter.net/showmessages.php?topic="
-				});
-				
-				response.end();
+				// I guess Do nothing
+				return;
 			}
 		
 			else {

@@ -19,6 +19,12 @@ var appRouter = function(app) {
 		
 		else {
 			app.loginToBlueSite();
+			
+			res.writeHead(301, {
+					Location: "http://boards.endoftheinter.net/showmessages.php?topic=" + app.currentTopicId
+			});
+			
+			res.end();
 			return;
 		}
 	});
@@ -29,7 +35,7 @@ var appRouter = function(app) {
 		}
 		
 		else {
-			app.addNewQuotes(req.query.url);
+			app.addNewQuotes(req.query.url);		
 			return;
 		};
 	});
