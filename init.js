@@ -204,6 +204,7 @@ app.getTopicList = function() {
 		
 		if (!error && response.statusCode === 200) {
 			
+			console.log(body);
 			var $ = cheerio.load(body);
 			var topicList = $('tr').get();
 			console.log("topic list length:", topicList.length);
