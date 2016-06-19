@@ -207,7 +207,7 @@ app.getTopicList = function() {
 			var $ = cheerio.load(body);
 			// Pick random topic to pester
 			var topic = $('tr').get(Math.floor((Math.random() * 49)) + 1);
-			console.log(topic.attr('tag'));
+			console.log(topic.tagName);
 			$ = cheerio.load(topic);
 			var topicHref = $('a').get[0].attr('href');
 			
