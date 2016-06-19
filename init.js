@@ -216,13 +216,15 @@ app.getTopicList = function() {
 					href = "https:" + $(element).attr('href');
 					var topicNumberRegex = href.match(/(topic=)([0-9]+)/);
 					
-					if (topicNumberRegex) {
+					if (href !== "https:" && topicNumberRegex) {
 						currentTopicId = topicNumberRegex[1];
 						console.log('current topic id:', currentTopicId);
 						return false;
 					}
 					
 					else {
+						console.log("Couldn't find href. Index:", index);
+						console.log("Random topic:", randomTopic);
 						// Avoid potential for infinite loop here
 						return false;
 					}
