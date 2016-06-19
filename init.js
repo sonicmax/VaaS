@@ -204,7 +204,7 @@ app.getTopicList = function() {
 		
 		if (!error && response.statusCode === 200) {
 			
-			var $ = cheerio.load(response);
+			var $ = cheerio.load(body);
 			var topicList = $('.grid').get('tbody').get('tr');
 			console.log("topic list length:", topicList.get().length);
 			// Pick random topic to pester. The -1 / +1 here looks goofy, but is required to make sure we don't get 0 as output
@@ -235,7 +235,7 @@ app.getMessageList = function(url) {
 		
 		if (!error && response.statusCode === 200) {
 			
-			var $ = cheerio.load(response);
+			var $ = cheerio.load(body);
 			// Can't make POST requests without the value of this token, scraped from quickpost area
 			currentToken = $('.quickpost input[name="h"]').value();
 			app.contributeToDiscussion();
