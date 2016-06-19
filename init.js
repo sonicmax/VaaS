@@ -243,7 +243,7 @@ app.getMessageList = function(url) {
 			
 			var $ = cheerio.load(body);
 			// Can't make POST requests without the value of this token, scraped from quickpost area
-			currentToken = $('input[name="h"]').get(0).value();
+			currentToken = $('input[name="h"]').attr('value');
 			app.contributeToDiscussion();
 		}
 		
@@ -261,7 +261,7 @@ app.contributeToDiscussion = function() {
 	var formData = {};
 			formData.topic = currentTopic;
 			formData.h = currentToken;
-			formData.message = app.generateMarkovChain(true); // Pass true to get return value
+			formData.message = app.generateMarkovChain(true); // Pass true to get return value immediately
 			formData.submit = "Post Message";
 			
 	request.post({
