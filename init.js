@@ -208,9 +208,12 @@ app.getTopicList = function() {
 			try {
 				var $ = cheerio.load(body);
 				// Pick random topic to pester
-				var topics = $('td.oh div.fl a').get();
-				var topic = topics.get(Math.floor(Math.random() * 49) + 1);
+				var anchors = $('td.oh div.fl a').get();
+				console.log("anchors length: " + anchors.length);
+				
+				var anchor = topics[Math.floor(Math.random() * 49) + 1];
 				console.log("anchor: " + anchor.attr('href'));
+				
 				var href = topic.attr('href');							
 				
 				app.getMessageList(href);
