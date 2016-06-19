@@ -180,9 +180,8 @@ app.loginToBlueSite = function() {
 	}, (error, response, body) => {
 				
 			// After successful login, ETI will attempt to redirect you to homepage
-			if (!error && response.statusCode === 302) {									
-					app.cookieJar.setCookie("userid=" + process.env.USER_ID);
-					app.loggedIn = true;					
+			if (!error && response.statusCode === 302) {
+					app.getTopicList();			
 			}
 			
 			else {
