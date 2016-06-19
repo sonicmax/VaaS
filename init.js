@@ -166,7 +166,7 @@ app.addNewQuotes = function(url) {
   *		Log into ETI using environment vars as credentials
   */
 
-app.loginToBlueSite = function() {
+app.initBot = function() {
 	const LOGIN_URL = "https://endoftheinter.net/";
 	const formData = { b: process.env.USERNAME, p: process.env.PASSWORD };
 	
