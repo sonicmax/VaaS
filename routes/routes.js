@@ -12,7 +12,7 @@ var appRouter = function(app) {
 	});
 	
 	// Need to include token from Heroku settings as query paramater in POST requests to these routes
-	app.post("/testbot", (req, res) => {
+	app.get("/testbot", (req, res) => {
 		if (req.query.token !== process.env.TOKEN) {
 			return;
 		}
