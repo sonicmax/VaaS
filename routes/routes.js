@@ -20,12 +20,14 @@ var appRouter = function(app) {
 		else {
 			app.initBot((topicId) => {
 				
+				console.log("initBot success. posting in topic ". topicId);
+				
 				res.writeHead(302, {
 					Location: (req.socket.encrypted ? 'https://' : 'http://') + 
 							"boards.endoftheinter.net/showmessages.php?topic=" + topicId
 				});
 				
-				res.end();		
+				res.end();	
 			});						
 		}
 	});

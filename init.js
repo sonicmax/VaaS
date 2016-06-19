@@ -297,7 +297,7 @@ app.contributeToDiscussion = function() {
 		
 			if (!error && response.statusCode === 200) {
 				// I guess Do nothing
-				console.log("Post successful @", app.currentTopicId);
+				console.log("Post successful @", currentTopicId);
 				return;
 			}
 		
