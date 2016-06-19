@@ -204,32 +204,22 @@ app.getTopicList = function() {
 	, (error, response, body) => {
 		
 		if (!error && response.statusCode === 200) {
+			// Find random topic to pester
+			var $ = cheerio.load(body);
+			var randomTopic = Math.floor(Math.random() * 50) + 1;
+			var href;
 			
-			try {
-				// Find random topic to pester
-				var $ = cheerio.load(body);
-				var randomTopic = Math.floor(Math.random() * 50) + 1;
-				var href;
+			// I don't understand the cheerio library. This is ridiculous. I don't care.
+			$('td.oh div.fl a').each((index, element) => {
 				
-				// I don't understand the cheerio library. This is ridiculous. I don't care.
-				$('td.oh div.fl a').each((index, element) => {
-					
-					if (index === randomTopic) {
-						href = $(element).attr('href');
-						return false;
-					}
-					
-				});
+				if (index === randomTopic) {
+					href = "https" + $(element).attr('href');
+					return false;
+				}
 				
-				console.log("href: " + href);
-				
-				app.getMessageList(href);
-				
-			} catch (e) {
-				
-				console.log("Error while parsing topic list:");
-				throw e;
-			}
+			});
+			
+			app.getMessageList(href);
 		}
 		
 		else {
