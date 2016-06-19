@@ -208,8 +208,8 @@ app.getTopicList = function() {
 			try {
 				var $ = cheerio.load(body);
 				// Pick random topic to pester
-				var topics = $('td.oh tr').get();
-				var topic = $('td.oh tr').get(Math.floor((Math.random() * 49)) + 1);
+				var topics = $('td.oh div.fl').get();
+				var topic = $('td.oh div.fl').get(Math.floor((Math.random() * 49)) + 1);
 				console.log("topics: ", topics.length);
 				console.log("topic tagname: ", topic.tagName);
 				
