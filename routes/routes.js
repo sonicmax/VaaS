@@ -23,7 +23,8 @@ var appRouter = function(app) {
 			console.log("Redirecting request to", app.currentTopicId);
 			
 			res.writeHead(302, {
-					Location: "https://boards.endoftheinter.net/showmessages.php?topic=" + app.currentTopicId			
+				Location: (req.socket.encrypted ? 'https://' : 'http://') +
+					boards.endoftheinter.net/showmessages.php?topic=" + app.currentTopicId
 			});
 			
 			res.end();
@@ -37,7 +38,7 @@ var appRouter = function(app) {
 		}
 		
 		else {
-			app.addNewQuotes(req.query.url);		
+			app.addNewQuotes(req.query.url);
 			return;
 		};
 	});
