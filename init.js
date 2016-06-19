@@ -28,6 +28,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.cookieJar = request.jar(); // Global cookie store
 app.cachedData = { "post": "" }; // Basic format for JSON response
 app.currentTopicId; // Current topic that bot is posting in
+app.isLoggedIn = false;
 
 // Set up routing for API
 var routes = require("./routes/routes.js")(app);
@@ -170,25 +171,33 @@ app.initBot = function() {
 	const LOGIN_URL = "https://endoftheinter.net/";
 	const formData = { b: process.env.USERNAME, p: process.env.PASSWORD };
 	
-	request.post({
+	if (!app.isLoggedIn) {
 		
-		headers: {"content-type": "application/x-www-form-urlencoded"},
-		url: LOGIN_URL,
-		form: formData,
-		jar: app.cookieJar
-		
-	}, (error, response, body) => {
-				
-			// After successful login, ETI will attempt to redirect you to homepage
-			if (!error && response.statusCode === 302) {
-					app.getTopicList();			
-			}
+		request.post({
 			
-			else {
-				console.log("Login failed.");
-				throw error;
-			}
-	});
+			headers: {"content-type": "application/x-www-form-urlencoded"},
+			url: LOGIN_URL,
+			form: formData,
+			jar: app.cookieJar
+			
+		}, (error, response, body) => {
+					
+				// After successful login, ETI will attempt to redirect you to homepage
+				if (!error && response.statusCode === 302) {
+						app.isLoggedIn = true;
+						app.getTopicList();			
+				}
+				
+				else {
+					console.log("Login failed.");
+					throw error;
+				}
+		});
+	}
+	
+	else {
+		app.getTopicList();
+	}
 };
 
 app.getTopicList = function() {
@@ -199,8 +208,7 @@ app.getTopicList = function() {
 		url: LUE_TOPICS,
 		jar: app.cookieJar
 		
-	}
-	, (error, response, body) => {
+	}, (error, response, body) => {
 		
 		if (!error && response.statusCode === 200) {
 			// Find random topic to pester
@@ -217,7 +225,6 @@ app.getTopicList = function() {
 					
 					if (href !== "https:" && topicNumberRegex) {
 						app.currentTopicId = topicNumberRegex[2];
-						console.log('current topic id:', app.currentTopicId);
 						return false;
 					}
 					
@@ -256,7 +263,6 @@ app.getMessageList = function(url) {
 			var $ = cheerio.load(body);
 			// Can't make POST requests without the value of this token, scraped from quickpost area
 			currentToken = $('input[name="h"]').attr('value');
-			console.log(currentToken);
 			app.contributeToDiscussion();
 		}
 		
@@ -290,7 +296,7 @@ app.contributeToDiscussion = function() {
 			}
 		
 			else {
-				console.log("Post unsuccessful: code ", response.statusCode);
+				console.log("Post unsuccessful.");
 				throw error;
 			}
 		
