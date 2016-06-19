@@ -12,6 +12,7 @@ var firstWords = [];
 var currentWord = "";
 
 // Variables required for bot
+var currentTopicId;
 var currentToken;
 
 // Set up modules
@@ -27,7 +28,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.cookieJar = request.jar(); // Global cookie store
 app.cachedData = { "post": "" }; // Basic format for JSON response
-app.currentTopicId; // Current topic that bot is posting in
 app.isLoggedIn = false;
 
 // Set up routing for API
@@ -167,7 +167,7 @@ app.addNewQuotes = function(url) {
   *		Log into ETI using environment vars as credentials
   */
 
-app.initBot = function() {
+app.initBot = function(callback) {
 	const LOGIN_URL = "https://endoftheinter.net/";
 	const formData = { b: process.env.USERNAME, p: process.env.PASSWORD };
 	
@@ -185,7 +185,7 @@ app.initBot = function() {
 				// After successful login, ETI will attempt to redirect you to homepage
 				if (!error && response.statusCode === 302) {
 						app.isLoggedIn = true;
-						app.getTopicList();			
+						app.getTopicList(callback);		
 				}
 				
 				else {
@@ -196,11 +196,11 @@ app.initBot = function() {
 	}
 	
 	else {
-		app.getTopicList();
+		app.getTopicList(callback);
 	}
 };
 
-app.getTopicList = function() {
+app.getTopicList = function(callback) {
 	var LUE_TOPICS = "https://boards.endoftheinter.net/topics/LUE";
 	
 	request({
@@ -224,7 +224,8 @@ app.getTopicList = function() {
 					var topicNumberRegex = href.match(/(topic=)([0-9]+)/);
 					
 					if (href !== "https:" && topicNumberRegex) {
-						app.currentTopicId = topicNumberRegex[2];
+						currentTopicId = topicNumberRegex[2];
+						callback(currentTopicId);
 						return false;
 					}
 					
@@ -278,7 +279,7 @@ app.contributeToDiscussion = function() {
 	const QUICKPOST_URL = "https://boards.endoftheinter.net/async-post.php";
 	
 	var formData = {};
-			formData.topic = app.currentTopicId;
+			formData.topic = currentTopicId;
 			formData.h = currentToken;
 			formData.message = app.generateMarkovChain(true); // Pass true to get return value immediately
 			

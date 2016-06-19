@@ -18,17 +18,15 @@ var appRouter = function(app) {
 		}
 		
 		else {
-			app.initBot();
-			
-			console.log("Redirecting request to", app.currentTopicId);
-			
-			res.writeHead(302, {
-				Location: (req.socket.encrypted ? 'https://' : 'http://') + 
-						"boards.endoftheinter.net/showmessages.php?topic=" + app.currentTopicId
-			});
-			
-			res.end();
-			return;
+			app.initBot((topicId) => {
+				res.writeHead(302, {
+					Location: (req.socket.encrypted ? 'https://' : 'http://') + 
+							"boards.endoftheinter.net/showmessages.php?topic=" + topicId
+				});
+				
+				res.end();
+				return;				
+			});						
 		}
 	});
 	
