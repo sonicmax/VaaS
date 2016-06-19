@@ -1,23 +1,36 @@
 var appRouter = function(app) {
+	const DEFAULT_RESPONSE = { "post": "fhuuump" }; // silenced shotgun sound for error handling/secret reasons
+	
 	app.get("/", (req, res) => {
 			if (app.cachedData.post !== "") {
 				res.send(app.cachedData);
 				app.generateMarkovChain();
 			}
 			else {
-				return { "post": "fhuuump" }; // silenced shotgun sound for error handling
+				return DEFAULT_RESPONSE; 
 			}
 	});
 	
+	// Need to include token from Heroku settings as query paramater in POST requests to these routes
+	app.post("/testbot", (req, res) => {
+		if (req.query.token !== process.env.TOKEN) {
+			return DEFAULT_RESPONSE;
+		}
+		
+		else {
+			app.loginToBlueSite();
+			return DEFAULT_RESPONSE;
+		}
+	});
+	
 	app.post("/pastebin", (req, res) => {
-		// Obviously not just gonna let any old yahoo in here...
-		if (req.query.token != process.env.TOKEN) {
-			return;
+		if (req.query.token !== process.env.TOKEN) {
+			return DEFAULT_RESPONSE;
 		}
 		
 		else {
 			app.addNewQuotes(req.query.url);
-			return;
+			return DEFAULT_RESPONSE;
 		};
 	});
 	
