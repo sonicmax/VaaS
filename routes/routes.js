@@ -14,23 +14,23 @@ var appRouter = function(app) {
 	// Need to include token from Heroku settings as query paramater in POST requests to these routes
 	app.post("/testbot", (req, res) => {
 		if (req.query.token !== process.env.TOKEN) {
-			return DEFAULT_RESPONSE;
+			return;
 		}
 		
 		else {
 			app.loginToBlueSite();
-			return DEFAULT_RESPONSE;
+			return;
 		}
 	});
 	
 	app.post("/pastebin", (req, res) => {
 		if (req.query.token !== process.env.TOKEN) {
-			return DEFAULT_RESPONSE;
+			return;
 		}
 		
 		else {
 			app.addNewQuotes(req.query.url);
-			return DEFAULT_RESPONSE;
+			return;
 		};
 	});
 	
