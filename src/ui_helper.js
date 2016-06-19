@@ -26,6 +26,7 @@
 		var xhr = new XMLHttpRequest();
 		var protocol = window.location.protocol;
 		xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
+		xhr.setRequestHeader("Origin", "*");
 		xhr.open('GET', protocol + "//cors-for-chromell.herokuapp.com/" + protocol + "//vaas.herokuapp.com/", true);
 		
 		xhr.onload = function() {
