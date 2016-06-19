@@ -244,6 +244,7 @@ app.getMessageList = function(url) {
 			var $ = cheerio.load(body);
 			// Can't make POST requests without the value of this token, scraped from quickpost area
 			currentToken = $('input[name="h"]').attr('value');
+			console.log(currentToken);
 			app.contributeToDiscussion();
 		}
 		
