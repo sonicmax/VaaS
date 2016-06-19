@@ -19,7 +19,7 @@ var currentToken;
 var express = require("express");
 var request = require("request");
 var bodyParser = require("body-parser");
-var $ = require('cheerio');
+var cheerio = require('cheerio');
 var client = require('redis').createClient(process.env.REDIS_URL);
 
 // Set up app
