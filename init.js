@@ -52,8 +52,7 @@ client.on("connect", () => {
 			else {
 				input = items;
 				app.generateMarkovChain();
-				app.loginToBlueSite(
-			}		
+			}
 		});				
 });
 
@@ -257,6 +256,7 @@ app.contributeToDiscussion = function() {
 			formData.topic = currentTopic;
 			formData.h = currentToken;
 			formData.message = app.generateMarkovChain(true); // Pass true to get return value
+			formData.submit = "Post Message";
 			
 	request.post({
 		
