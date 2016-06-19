@@ -194,7 +194,7 @@ app.loginToBlueSite = function() {
 app.getTopicList = function() {
 	var LUE_TOPICS = "https://boards.endoftheinter.net/topics/LUE";
 	
-	request({
+	request.get({
 		
 		url: LUE_TOPICS,
 		jar: app.cookieJar
