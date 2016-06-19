@@ -26,9 +26,9 @@
 		var xhr = new XMLHttpRequest();
 		xhr.open('GET', "http://cors-for-chromell.herokuapp.com/" + "http://vaas.herokuapp.com/", true);
 		
-		xhr.onload = () => {
-			if (xhr.status === 200) {
-				var parsedResponse = JSON.parse(xhr.responseText);			
+		xhr.onload = function() {
+			if (this.status === 200) {
+				var parsedResponse = JSON.parse(this.responseText);			
 				post.innerHTML = parsedResponse.post;
 			}
 		};
