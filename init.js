@@ -26,6 +26,7 @@ var client = require('redis').createClient(process.env.REDIS_URL);
 var app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.cookieJar = request.jar(); // Global cookie store
 app.cachedData = { "post": "" }; // Basic format for JSON response
 app.loggedIn = false; // Indicates whether app has login cookie for ETI
 
