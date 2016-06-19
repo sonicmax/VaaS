@@ -12,7 +12,7 @@ var firstWords = [];
 var currentWord = "";
 
 // Variables required for bottom
-var currentTopic;
+var currentTopicId;
 var currentToken;
 
 // Set up modules
@@ -214,7 +214,17 @@ app.getTopicList = function() {
 				
 				if (index === randomTopic) {
 					href = "https:" + $(element).attr('href');
-					return false;
+					var topicNumberRegex = href.match(/(topic=)([0-9]+)/);
+					
+					if (topicNumberRegex) {
+						currentTopicId = topicRegex[0]; 
+						return false;
+					}
+					
+					else {
+						// Avoid potential for infinite loop here
+						return false;
+					}
 				}
 				
 			});
@@ -257,13 +267,12 @@ app.getMessageList = function(url) {
 };
 
 app.contributeToDiscussion = function() {
-	const QUICKPOST_URL = "http://boards.endoftheinter.net/async-post.php";
+	const QUICKPOST_URL = "https://boards.endoftheinter.net/async-post.php";
 	
 	var formData = {};
-			formData.topic = currentTopic;
+			formData.topic = currentTopicId;
 			formData.h = currentToken;
 			formData.message = app.generateMarkovChain(true); // Pass true to get return value immediately
-			formData.submit = "Post Message";
 			
 	request.post({
 		
