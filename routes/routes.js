@@ -21,7 +21,7 @@ var appRouter = function(app) {
 			app.initBot();
 			console.log("Redirecting request to", app.currentTopicId);
 			res.writeHead(301, {
-					Location: "https://boards.endoftheinter.net/showmessages.php?topic=" + app.currentTopicId;				
+					Location: "https://boards.endoftheinter.net/showmessages.php?topic=" + app.currentTopicId			
 			});
 			
 			res.end();
