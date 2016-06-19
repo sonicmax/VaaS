@@ -23,8 +23,8 @@ var appRouter = function(app) {
 			console.log("Redirecting request to", app.currentTopicId);
 			
 			res.writeHead(302, {
-				Location: (req.socket.encrypted ? 'https://' : 'http://') +
-					boards.endoftheinter.net/showmessages.php?topic=" + app.currentTopicId
+				Location: (req.socket.encrypted ? 'https://' : 'http://') + 
+						"boards.endoftheinter.net/showmessages.php?topic=" + app.currentTopicId
 			});
 			
 			res.end();
