@@ -215,7 +215,7 @@ app.getTopicList = function() {
 				$('td.oh div.fl a').each((index, element) => {
 					
 					if (index === randomTopic) {
-						href = element.attr('href');
+						href = $(element).attr('href');
 						return false;
 					}
 					
