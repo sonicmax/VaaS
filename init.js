@@ -287,9 +287,7 @@ app.contributeToDiscussion = function() {
 		
 			if (!error && response.statusCode === 200) {
 				console.log("Post successful");
-				response.statusCode = 302; 
-				response.setHeader("Location", "http://boards.endoftheinter.net/showmessages.php?topic=" + currentTopicId);
-				response.end();				
+				console.log(response.headers);
 			}
 		
 			else {
