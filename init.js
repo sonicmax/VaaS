@@ -208,16 +208,12 @@ app.getTopicList = function() {
 			try {
 				var $ = cheerio.load(body);
 				// Pick random topic to pester
-				var topics = $('td.oh div.fl').get();
-				var topic = $('td.oh div.fl').get(Math.floor((Math.random() * 49)) + 1);
-				console.log("topics: ", topics.length);
-				console.log("topic tagname: ", topic.tagName);
+				var topics = $('td.oh div.fl a').get();
+				var topic = topics.get(Math.floor(Math.random() * 49) + 1);
+				console.log("anchor: " + anchor.attr('href'));
+				var href = topic.attr('href');							
 				
-				$ = cheerio.load(topic);
-				var topicHref = $('a').get[0].attr('href');			
-				console.log("Scraped href: " + topicHref);
-				
-				app.getMessageList(topicHref);
+				app.getMessageList(href);
 				
 			} catch (e) {
 				
