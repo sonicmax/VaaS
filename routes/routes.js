@@ -19,13 +19,13 @@ var appRouter = function(app) {
 		
 		else {
 			app.initBot((topicId) => {
+				
 				res.writeHead(302, {
 					Location: (req.socket.encrypted ? 'https://' : 'http://') + 
 							"boards.endoftheinter.net/showmessages.php?topic=" + topicId
 				});
 				
-				res.end();
-				return;				
+				res.end();		
 			});						
 		}
 	});

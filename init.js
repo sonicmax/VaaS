@@ -164,7 +164,8 @@ app.addNewQuotes = function(url) {
 };
 
 /**
-  *		Log into ETI using environment vars as credentials
+  *		Log into ETI using environment vars as credentials & do bot stuff.
+	*		Use callback once topic ID has been scraped.
   */
 
 app.initBot = function(callback) {
@@ -184,6 +185,7 @@ app.initBot = function(callback) {
 					
 				// After successful login, ETI will attempt to redirect you to homepage
 				if (!error && response.statusCode === 302) {
+						console.log("Logged in successfully.");
 						app.isLoggedIn = true;
 						app.getTopicList(callback);		
 				}
@@ -196,6 +198,7 @@ app.initBot = function(callback) {
 	}
 	
 	else {
+		console.log("Already logged in - skipping");
 		app.getTopicList(callback);
 	}
 };
@@ -224,6 +227,7 @@ app.getTopicList = function(callback) {
 					var topicNumberRegex = href.match(/(topic=)([0-9]+)/);
 					
 					if (href !== "https:" && topicNumberRegex) {
+						console.log("Found topic to pester:", topicNumberRegex[2]);
 						currentTopicId = topicNumberRegex[2];
 						callback(currentTopicId);
 						return false;
