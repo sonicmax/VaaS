@@ -27,7 +27,8 @@ var appRouter = function(app) {
 							"boards.endoftheinter.net/showmessages.php?topic=" + topicId
 				});
 				
-				res.end();	
+				res.end();
+				return;
 			});						
 		}
 	});

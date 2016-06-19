@@ -229,7 +229,6 @@ app.getTopicList = function(callback) {
 					if (href !== "https:" && topicNumberRegex) {
 						console.log("Found topic to pester:", topicNumberRegex[2]);
 						currentTopicId = topicNumberRegex[2];
-						callback(currentTopicId);
 						return false;
 					}
 					
@@ -243,7 +242,7 @@ app.getTopicList = function(callback) {
 				
 			});
 			
-			app.getMessageList(href);
+			app.getMessageList(callback);
 		}
 		
 		else {
@@ -254,7 +253,7 @@ app.getTopicList = function(callback) {
 	});
 };
 
-app.getMessageList = function(url) {
+app.getMessageList = function(callback) {
 	
 	request({
 		
@@ -268,7 +267,7 @@ app.getMessageList = function(url) {
 			var $ = cheerio.load(body);
 			// Can't make POST requests without the value of this token, scraped from quickpost area
 			currentToken = $('input[name="h"]').attr('value');
-			app.contributeToDiscussion();
+			app.contributeToDiscussion(callback);
 		}
 		
 		else {
@@ -279,7 +278,7 @@ app.getMessageList = function(url) {
 	});
 };
 
-app.contributeToDiscussion = function() {
+app.contributeToDiscussion = function(callback) {
 	const QUICKPOST_URL = "https://boards.endoftheinter.net/async-post.php";
 	
 	var formData = {};
@@ -298,7 +297,7 @@ app.contributeToDiscussion = function() {
 			if (!error && response.statusCode === 200) {
 				// I guess Do nothing
 				console.log("Post successful @", currentTopicId);
-				return;
+				callback(currentTopicId);
 			}
 		
 			else {
