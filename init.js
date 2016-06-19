@@ -217,7 +217,7 @@ app.getTopicList = function() {
 					var topicNumberRegex = href.match(/(topic=)([0-9]+)/);
 					
 					if (topicNumberRegex) {
-						currentTopicId = topicRegex[0]; 
+						currentTopicId = topicNumberRegex[0]; 
 						return false;
 					}
 					
