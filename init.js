@@ -286,8 +286,12 @@ app.contributeToDiscussion = function() {
 	}, (error, response, body) => {
 		
 			if (!error && response.statusCode === 200) {
-				console.log("Post successful");
-				console.log(response.headers);
+				// Redirect user to whatever bongers said
+				response.writeHead(301, {
+						Location: "http://boards.endoftheinter.net/showmessages.php?topic="
+				});
+				
+				response.end();
 			}
 		
 			else {
