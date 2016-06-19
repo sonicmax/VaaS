@@ -205,8 +205,8 @@ app.getTopicList = function() {
 		
 		if (!error && response.statusCode === 200) {					
 			var $ = cheerio.load(body);
-			// Pick random topic to pester. The -2 / +1 here looks goofy but ensures we get number between 1-49
-			var topic = $('tr').get(Math.floor((Math.random() * topicList.length - 2)) + 1);
+			// Pick random topic to pester
+			var topic = $('tr').get(Math.floor((Math.random() * 49)) + 1);
 			var topicHref = topic('a').get[0].attr('href');
 			
 			console.log("Scraped href: " + topicHref);
