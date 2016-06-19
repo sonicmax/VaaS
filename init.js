@@ -207,7 +207,7 @@ app.getTopicList = function() {
 			var $ = cheerio.load(body);
 			// Pick random topic to pester
 			var topic = $('tr').get(Math.floor((Math.random() * 49)) + 1);
-			var topicHref = topic('a').get[0].attr('href');
+			var topicHref = $(topic).get('a').get[0].attr('href');
 			
 			console.log("Scraped href: " + topicHref);
 			
@@ -235,7 +235,7 @@ app.getMessageList = function(url) {
 			
 			var $ = cheerio.load(body);
 			// Can't make POST requests without the value of this token, scraped from quickpost area
-			currentToken = $('.quickpost input[name="h"]').value();
+			currentToken = $('input[name="h"]').value();
 			app.contributeToDiscussion();
 		}
 		
