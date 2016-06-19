@@ -205,8 +205,8 @@ app.getTopicList = function() {
 		if (!error && response.statusCode === 200) {
 			
 			var $ = cheerio.load(body);
-			var topicList = $('.grid tbody tr').get();
-			console.log("topic list length:", topicList.get().length);
+			var topicList = $('.body.grid tbody tr').get();
+			console.log("topic list length:", topicList.length);
 			// Pick random topic to pester. The -1 / +1 here looks goofy, but is required to make sure we don't get 0 as output
 			var target = topicList.get[Math.floor((Math.random() * topicList.length - 1)) + 1];
 			var topicHref = target('td a').get[0].attr('href');
