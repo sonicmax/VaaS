@@ -286,7 +286,7 @@ app.contributeToDiscussion = function() {
 		
 			if (!error && response.statusCode === 200) {
 				// I guess Do nothing
-				return;
+				return app.currentTopicId;
 			}
 		
 			else {

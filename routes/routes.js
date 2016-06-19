@@ -18,10 +18,10 @@ var appRouter = function(app) {
 		}
 		
 		else {
-			app.loginToBlueSite();
+			var topicId = app.initBot();
 			
 			res.writeHead(301, {
-					Location: "http://boards.endoftheinter.net/showmessages.php?topic=" + app.currentTopicId
+					Location: "https://boards.endoftheinter.net/showmessages.php?topic=" + topicId
 			});
 			
 			res.end();
