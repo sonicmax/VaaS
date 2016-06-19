@@ -207,7 +207,7 @@ app.getTopicList = function() {
 			var $ = cheerio.load(body);
 			// Pick random topic to pester
 			var topic = $('tr').get(Math.floor((Math.random() * 49)) + 1);
-			var topicHref = $(topic).get('a').get[0].attr('href');
+			var topicHref = cheerio.load(topic).get('a').get[0].attr('href');
 			
 			console.log("Scraped href: " + topicHref);
 			
