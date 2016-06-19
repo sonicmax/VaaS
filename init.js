@@ -197,7 +197,7 @@ app.getTopicList = function() {
 	
 	request({
 		
-		url: LUE_TOPICS
+		url: LUE_TOPICS,
 		jar: app.cookieJar
 		
 	}
@@ -228,7 +228,7 @@ app.getTopicList = function(url) {
 	
 	request({
 		
-		url: url
+		url: url,
 		jar: app.cookieJar
 		
 	}, (error, response, body) => {
@@ -262,6 +262,7 @@ app.contributeToDiscussion = function() {
 		
 		url: QUICKPOST_URL,
 		form: formData,
+		jar: app.cookieJar
 
 	}, (error, response, body) => {
 		
