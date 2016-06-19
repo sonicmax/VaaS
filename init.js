@@ -11,10 +11,15 @@ var input = [];
 var firstWords = [];
 var currentWord = "";
 
+// Variables required for bottom
+var currentTopic;
+var currentToken;
+
 // Set up modules
 var express = require("express");
 var request = require("request");
 var bodyParser = require("body-parser");
+var cheerio = require('cheerio');
 var client = require('redis').createClient(process.env.REDIS_URL);
 
 // Set up app
@@ -29,7 +34,7 @@ var routes = require("./routes/routes.js")(app);
 
 // Set up server
 var server = app.listen(process.env.PORT || LOCAL_HOST, () => {
-	console.log("vesperbot is sentient and ready to shitpost");
+	console.log(process.env.USERNAME + "-bot is sentient and ready to shitpost");
 });
 
 
@@ -57,7 +62,7 @@ client.on("connect", () => {
   * Markov chain methods 
 	*/
 
-app.generateMarkovChain = function() {
+app.generateMarkovChain = function(shouldReturn) {
 	var output = [];
 	
 	app.createArrays();
@@ -77,8 +82,12 @@ app.generateMarkovChain = function() {
 			currentWord = "";
 		}
 	}
-		
+	
 	app.cachedData.post = output.join(" ").trim();
+	
+	if (shouldReturn) {				
+		return app.cachedData.post;
+	}
 };
 
 app.getPostLength = function() {
@@ -178,7 +187,92 @@ app.loginToBlueSite = function() {
 			}
 			
 			else {
-				console.log("Login failed.");				
+				console.log("Login failed.");
+				throw error;
 			}
+	});
+};
+
+app.getTopicList = function() {
+	var LUE_TOPICS = "https://boards.endoftheinter.net/topics/LUE";
+	
+	request({
+		
+		url: LUE_TOPICS
+		jar: app.cookieJar
+		
+	}
+	, (error, response, body) => {
+		
+		if (!error && response.statusCode === 200) {
+			
+			$ = cheerio.load(response);
+			var topicList = $('.grid tbody tr');
+			// Pick random topic to pester. The -1 / +1 here looks goofy, but is required to make sure we don't get 0 as output
+			var target = topicList[Math(Math.floor((Math.random() * topicList.length - 1)) + 1)];
+			var topicHref = target('td a')[0].attr('href');
+			
+			console.log("Scraped href: " + topicHref);
+			
+			app.getMessageList(topicHref);
+		}
+		
+		else {
+			console.log("Topic list GET failed.");
+			throw error;
+		}
+		
+	});
+};
+
+app.getTopicList = function(url) {
+	
+	request({
+		
+		url: url
+		jar: app.cookieJar
+		
+	}, (error, response, body) => {
+		
+		if (!error && response.statusCode === 200) {
+			
+			$ = cheerio.load(response);
+			// Can't make POST requests without the value of this token, scraped from quickpost area
+			currentToken = $('.quickpost input[name="h"]').value();
+			app.contributeToDiscussion();
+		}
+		
+		else {
+			console.log("Topic list GET failed.");
+			throw error;
+		}
+		
+	});
+};
+
+app.contributeToDiscussion = function() {
+	const QUICKPOST_URL = "http://boards.endoftheinter.net/async-post.php";
+	
+	var formData = {};
+			formData.topic = currentTopic;
+			formData.h = currentToken;
+			formData.message = app.generateMarkovChain(true); // Pass true to get return value
+			
+	request.post({
+		
+		url: QUICKPOST_URL,
+		form: formData,
+
+	}, (error, response, body) => {
+		
+			if (!error && response.statusCode === 200) {
+				console.log("Post successful");
+			}
+		
+			else {
+				console.log("Post unsuccessful: code ", response.statusCode);
+				throw error;
+			}
+		
 	});
 };
