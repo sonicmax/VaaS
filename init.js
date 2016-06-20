@@ -170,11 +170,11 @@ app.addNewQuotes = function(url, onSuccess) {
 };
 
 /**
-  *		Log into ETI using environment vars as credentials & do bot stuff.
-	*		Use callback once topic ID has been scraped.
+  *		Log into ETI using environment vars as credentials & do bot stuff
+  *		Calls back onSuccess method after successful POST to async-post.php
   */
 
-app.initBot = function(callback) {
+app.initBot = function(onSuccess) {
 	const LOGIN_URL = "https://endoftheinter.net/";
 	const formData = { b: process.env.USERNAME, p: process.env.PASSWORD };
 	
@@ -193,7 +193,7 @@ app.initBot = function(callback) {
 				if (!error && response.statusCode === 302) {
 						console.log("Logged in successfully.");
 						app.isLoggedIn = true;
-						app.getTopicList(callback);		
+						app.getTopicList(onSuccess);		
 				}
 				
 				else {
@@ -205,11 +205,11 @@ app.initBot = function(callback) {
 	
 	else {
 		console.log("Already logged in - skipping");
-		app.getTopicList(callback);
+		app.getTopicList(onSuccess);
 	}
 };
 
-app.getTopicList = function(callback) {
+app.getTopicList = function(onSuccess) {
 	var LUE_TOPICS = "https://boards.endoftheinter.net/topics/LUE";
 	
 	request({
@@ -248,7 +248,7 @@ app.getTopicList = function(callback) {
 				
 			});
 			
-			app.getMessageList(callback);
+			app.getMessageList(onSuccess);
 		}
 		
 		else {
@@ -259,7 +259,7 @@ app.getTopicList = function(callback) {
 	});
 };
 
-app.getMessageList = function(callback) {
+app.getMessageList = function(onSuccess) {
 	
 	request({
 		
@@ -273,7 +273,7 @@ app.getMessageList = function(callback) {
 			var $ = cheerio.load(body);
 			// Can't make POST requests without the value of this token, scraped from quickpost area
 			currentToken = $('input[name="h"]').attr('value');
-			app.contributeToDiscussion(callback);
+			app.contributeToDiscussion(onSuccess);
 		}
 		
 		else {
@@ -284,7 +284,7 @@ app.getMessageList = function(callback) {
 	});
 };
 
-app.contributeToDiscussion = function(callback) {
+app.contributeToDiscussion = function(onSuccess) {
 	const QUICKPOST_URL = "https://boards.endoftheinter.net/async-post.php";
 	
 	var formData = {};
@@ -301,9 +301,9 @@ app.contributeToDiscussion = function(callback) {
 	}, (error, response, body) => {
 		
 			if (!error && response.statusCode === 200) {
-				// Callback appRouter with topic id
+				// Callback onSuccess with topic id
 				console.log("Post successful @", currentTopicId);
-				callback(currentTopicId);
+				onSuccess(currentTopicId);
 			}
 		
 			else {
