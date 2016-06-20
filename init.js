@@ -287,10 +287,11 @@ app.getMessageList = function(onSuccess) {
 app.contributeToDiscussion = function(onSuccess) {
 	const QUICKPOST_URL = "https://boards.endoftheinter.net/async-post.php";
 	
-	var formData = {};
-			formData.topic = currentTopicId;
-			formData.h = currentToken;
-			formData.message = app.generateMarkovChain(true); // Pass true to get return value immediately
+	var formData = {
+			topic: currentTopicId,
+			h: currentToken,
+			message: app.generateMarkovChain(true) // Pass true to get return value immediately
+	};
 			
 	request.post({
 		
