@@ -40,7 +40,7 @@ var server = app.listen(process.env.PORT || LOCAL_HOST, () => {
 
 
 /**
-  *		Redis db handler 
+  *	Redis db handler 
   */
 
 client.on("connect", () => {
@@ -60,7 +60,7 @@ client.on("connect", () => {
 
 
 /**
-  * Markov chain methods 
+  *	Markov chain methods 
   */
 
 app.generateMarkovChain = function(shouldReturn) {
@@ -141,8 +141,8 @@ app.generateNextWord = function() {
 
 
 /**
-  *		Method which allows us to add new quotes from pastebin raw links
-  *		Calls onSuccess with truthy value after quotes have been pushed to Redis
+  *	Method which allows us to add new quotes from pastebin raw links
+  *	Calls onSuccess with truthy value after quotes have been pushed to Redis
   */
 	
 app.addNewQuotes = function(url, onSuccess) {
@@ -170,8 +170,8 @@ app.addNewQuotes = function(url, onSuccess) {
 };
 
 /**
-  *		Log into ETI using environment vars as credentials & do bot stuff
-  *		Calls back onSuccess method after successful POST to async-post.php
+  *	Log into ETI using environment vars as credentials & do bot stuff
+  *	Calls back onSuccess method after successful POST to async-post.php
   */
 
 app.initBot = function(onSuccess) {
