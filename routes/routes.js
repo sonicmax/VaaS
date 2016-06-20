@@ -17,14 +17,10 @@ var appRouter = function(app) {
 			return;
 		}		
 		
-		var target;
+		var target = false;
 		
 		if (req.query.topic) {
 			target = req.query.topic;
-		}
-		
-		else {
-			target = null;
 		}
 	
 		// Chooses random topic if none is specified
