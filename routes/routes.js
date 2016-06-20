@@ -33,15 +33,16 @@ var appRouter = function(app) {
 	
 	app.get("/pastebin", (req, res) => {
 		if (req.query.token !== process.env.TOKEN) {
-			return;
+			return {"quotes added":, false);
 		}
 		
 		else {
-			app.addNewQuotes(req.query.url);
-			return;
-		};
+			app.addNewQuotes(req.query.url, (onSuccess) => {
+				return { "quotes added":, onSuccess };
+			});			
+		}
+		
 	});
-	
 };
  
 module.exports = appRouter;

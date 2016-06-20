@@ -142,9 +142,10 @@ app.generateNextWord = function() {
 
 /**
   *		Method which allows us to add new quotes from pastebin raw links
+  *		Calls onSuccess with truthy value after quotes have been pushed to Redis
   */
 	
-app.addNewQuotes = function(url) {
+app.addNewQuotes = function(url, onSuccess) {
 	request.get(url, ((error, response, body) => {
 		if (!error && response.statusCode == 200) {
 			// Ignore blank lines, 
@@ -152,12 +153,14 @@ app.addNewQuotes = function(url) {
 			
 			client.lrange("quotes", 0, -1, (error, items) => {
 				if (error) {
+					onSuccess(false);
 					throw error;
 				}
 				else {
 					// Update local & disk cache
 					input = input.concat(quotes);
 					client.rpush.apply(client, ["quotes"].concat(quotes).concat(() => { console.log("Quotes stored to redis") }));
+					onSuccess(true);
 				}
 			});	
 		
