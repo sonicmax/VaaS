@@ -52,11 +52,11 @@ var appRouter = function(app) {
 		}
 	});
 	
-	app.get("get/list", (req res) => {
+	/*app.get("get/list", (req, res) => {
 		if (req.query.token === process.env.TOKEN_2) {
 			return { posts: app.getPostsAsArray() };
 		}
-	});
+	});*/
 };
  
 module.exports = appRouter;
