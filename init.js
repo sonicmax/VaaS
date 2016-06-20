@@ -210,7 +210,7 @@ app.initBot = function(onSuccess) {
 };
 
 app.getTopicList = function(onSuccess) {
-	var LUE_TOPICS = "https://boards.endoftheinter.net/topics/LUE-CJ";
+	var LUE_TOPICS = "https://boards.endoftheinter.net/topics/LUE-CJ-Anonymous";
 	
 	request({
 		
