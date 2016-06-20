@@ -31,7 +31,7 @@ var appRouter = function(app) {
 		}
 	});
 	
-	app.post("/pastebin", (req, res) => {
+	app.get("/pastebin", (req, res) => {
 		if (req.query.token !== process.env.TOKEN) {
 			return;
 		}

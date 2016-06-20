@@ -47,12 +47,13 @@ client.on("connect", () => {
 		// Attempt to get "quotes" array from Redis
 		client.lrange("quotes", 0, -1, (error, items) => {
 			if (error) {
-				// TODO: Store emergency vesper.txt somewhere in repo and use that instead
-				throw error;
-			}		
+				// TODO: offer ability to use .txt files
+			}
 			else {
 				input = items;
-				app.generateMarkovChain();
+				if (input.length > 0) {
+					app.generateMarkovChain();
+				}
 			}
 		});				
 });
@@ -295,7 +296,7 @@ app.contributeToDiscussion = function(callback) {
 	}, (error, response, body) => {
 		
 			if (!error && response.statusCode === 200) {
-				// I guess Do nothing
+				// Callback appRouter with topic id
 				console.log("Post successful @", currentTopicId);
 				callback(currentTopicId);
 			}
