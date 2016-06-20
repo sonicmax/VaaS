@@ -15,20 +15,24 @@ var appRouter = function(app) {
 	app.get("/testbot", (req, res) => {
 		if (req.query.token !== process.env.TOKEN) {
 			return;
-		}
+		}		
 		
-		else {
-			app.initBot((topicId) => {	
-				console.log("initBot success. posting in topic ", topicId);
-				
-				res.writeHead(302, {
-					Location: "https://boards.endoftheinter.net/showmessages.php?topic=" + topicId
-				});
-				
-				res.end();
-				return;
-			});						
+		var target;
+		
+		if (req.query.topic) {
+			target = req.query.topic;
 		}
+
+		app.initBot(target, (topicId) => {	
+			console.log("initBot success. posting in topic ", topicId);
+			
+			res.writeHead(302, {
+				Location: "https://boards.endoftheinter.net/showmessages.php?topic=" + topicId
+			});
+			
+			res.end();
+			return;
+		});
 	});
 	
 	app.get("/pastebin", (req, res) => {

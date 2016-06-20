@@ -174,7 +174,7 @@ app.addNewQuotes = function(url, onSuccess) {
   *	Calls back onSuccess method after successful POST to async-post.php
   */
 
-app.initBot = function(onSuccess) {
+app.initBot = function(topicId, onSuccess) {
 	const LOGIN_URL = "https://endoftheinter.net/";
 	const formData = { b: process.env.USERNAME, p: process.env.PASSWORD };
 	
@@ -191,9 +191,16 @@ app.initBot = function(onSuccess) {
 					
 				// After successful login, ETI will attempt to redirect you to homepage
 				if (!error && response.statusCode === 302) {
-						console.log("Logged in successfully.");
-						app.isLoggedIn = true;
+					console.log("Logged in successfully.");
+					app.isLoggedIn = true;
+
+					if (topicId) {
+						app.getMessageList(topicId, onSuccess);
+					}
+					
+					else {						
 						app.getTopicList(onSuccess);		
+					}
 				}
 				
 				else {
@@ -204,8 +211,13 @@ app.initBot = function(onSuccess) {
 	}
 	
 	else {
-		console.log("Already logged in - skipping");
-		app.getTopicList(onSuccess);
+		if (topicId) {
+			app.getMessageList(topicId, onSuccess);
+		}
+		
+		else {			
+			app.getTopicList(onSuccess);		
+		}
 	}
 };
 
@@ -259,7 +271,11 @@ app.getTopicList = function(onSuccess) {
 	});
 };
 
-app.getMessageList = function(onSuccess) {
+app.getMessageList = function(topicQueryParameter, onSuccess) {
+	
+	if (topicQueryParameter) {
+		currentTopicId = topicQueryParameter;
+	}
 	
 	request({
 		
