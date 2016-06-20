@@ -72,7 +72,9 @@ app.generateMarkovChain = function(shouldReturn) {
 	currentWord = firstWords[Math.floor((Math.random() * firstWords.length))];	
 	
 	for (let i = 0, len = app.getPostLength(); i < len; i++) {
-		output.push(currentWord);		
+		if (currentWord !== "") {
+			output.push(currentWord);
+		}		
 		
 		var nextWord = app.generateNextWord();
 		
