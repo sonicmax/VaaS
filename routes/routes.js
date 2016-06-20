@@ -22,7 +22,12 @@ var appRouter = function(app) {
 		if (req.query.topic) {
 			target = req.query.topic;
 		}
-
+		
+		else {
+			target = null;
+		}
+	
+		// Chooses random topic if none is specified
 		app.initBot(target, (topicId) => {	
 			console.log("initBot success. posting in topic ", topicId);
 			
@@ -47,6 +52,11 @@ var appRouter = function(app) {
 		}
 	});
 	
+	app.get("get/list", (req res) => {
+		if (req.query.token === process.env.TOKEN_2) {
+			return { posts: app.getPostsAsArray() };
+		}
+	});
 };
  
 module.exports = appRouter;

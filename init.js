@@ -193,13 +193,13 @@ app.initBot = function(topicId, onSuccess) {
 				if (!error && response.statusCode === 302) {
 					console.log("Logged in successfully.");
 					app.isLoggedIn = true;
-
-					if (topicId) {
-						app.getMessageList(topicId, onSuccess);
+					
+					if (!topicId) {
+						app.getTopicList(onSuccess);
 					}
 					
-					else {						
-						app.getTopicList(onSuccess);		
+					else {
+						app.getMessageList(topicId, onSuccess)						
 					}
 				}
 				
