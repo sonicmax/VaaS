@@ -295,7 +295,7 @@ app.contributeToDiscussion = function(callback) {
 	}, (error, response, body) => {
 		
 			if (!error && response.statusCode === 200) {
-				// I guess Do nothing
+				// Callback appRouter with topic id
 				console.log("Post successful @", currentTopicId);
 				callback(currentTopicId);
 			}
