@@ -40,8 +40,8 @@ var server = app.listen(process.env.PORT || LOCAL_HOST, () => {
 
 
 /**
-	*		Redis db handler 
-	*/
+  *		Redis db handler 
+  */
 
 client.on("connect", () => {
 		// Attempt to get "quotes" array from Redis
@@ -61,7 +61,7 @@ client.on("connect", () => {
 
 /**
   * Markov chain methods 
-	*/
+  */
 
 app.generateMarkovChain = function(shouldReturn) {
 	var output = [];
