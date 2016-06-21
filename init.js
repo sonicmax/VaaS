@@ -222,15 +222,19 @@ app.initBot = function(topicId, msg, onSuccess) {
 	}
 };
 
-app.subscribeToUpdates = function(topicId, callback) {
+/**
+  *	Allows us to find current number of unread PMs and number of posts in topic.
+  */
+
+app.subscribeToUpdates = function(topicId, pmCount, postCount, callback) {
 	const ENDPOINT = "https://evt0.endoftheinter.net/subscribe";
 	
 	var topicPayload = UINT64(0x0200).shiftLeft(UINT64(48)).or(UINT64(topicId));
 	var pmPayload = UINT64(0x0100).shiftLeft(UINT64(48)).or(UINT64(process.env.USER_ID));
 	
 	var payload = {};
-	payload[pmPayload] = 0;
-	payload[topicPayload] = 1;
+	payload[pmPayload] = pmCount || 0; // Return all messages by default
+	payload[topicPayload] = postCount || 1; // Returns total post count by default
 	
 	console.log(JSON.stringify(payload));
 	
@@ -294,7 +298,7 @@ app.getTopicList = function(onSuccess) {
 				
 			});
 			
-			app.getMessageList(topicId, false, onSuccess);
+			app.getMessageList(topicId, null, onSuccess);
 		}
 		
 		else {

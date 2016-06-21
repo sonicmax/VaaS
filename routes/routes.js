@@ -24,7 +24,7 @@ var appRouter = function(app) {
 			target = req.query.topic;
 		}
 
-		app.initBot(target, false, (topicId) => {
+		app.initBot(target, null, (topicId) => {
 		
 			res.writeHead(302, {
 				Location: "https://boards.endoftheinter.net/showmessages.php?topic=" + topicId
@@ -70,7 +70,7 @@ var appRouter = function(app) {
 			res.send(DEFAULT_RESPONSE);
 		}
 		
-		app.subscribeToUpdates(req.query.topic, (response) => {
+		app.subscribeToUpdates(req.query.topic, null, null, (response) => {
 			res.send(response);
 		});
 		
