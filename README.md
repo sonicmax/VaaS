@@ -34,8 +34,7 @@ Sample response:
 		
 		5) go to this URL in your browswer of choice: 
 				https://myappname.herokuapp.com/pastebin?token=TOKEN&url=PASTEBIN_RAW_URL
-		
-		6) uh it times out because i didnt code it yet but check your logs, it worked fine (todo lolz)
+				(responds with <i>{"quotes added": true/false}</i>)
 		
 		7) visit https://myappname.herokuapp.com/ to see some quick output
 		
