@@ -7,7 +7,7 @@ var appRouter = function(app) {
 				app.generateMarkovChain();
 			}
 			else {
-				return DEFAULT_RESPONSE; 
+				res.send(DEFAULT_RESPONSE);
 			}
 	});
 	
@@ -31,7 +31,6 @@ var appRouter = function(app) {
 			});
 			
 			res.end();
-			return;
 		});
 		
 	});
@@ -49,21 +48,32 @@ var appRouter = function(app) {
 			});
 			
 			res.end();
-			return;
 		});
 		
 	});
 	
 	app.get("/pastebin", (req, res) => {
 		if (req.query.token !== process.env.TOKEN) {
-			return { "quotes added": false };
+			res.send({ "quotes added": false });
 		}
 		
 		else {
 			app.addNewQuotes(req.query.url, (onSuccess) => {
-				return { "quotes added": onSuccess };
+				res.send({ "quotes added": onSuccess });
 			});			
 		}
+	});
+	
+	app.get("/subscribe", (req, res) => {
+		
+		if (req.query.token !== process.env.TOKEN || !req.query.topic) {
+			res.send(DEFAULT_RESPONSE);
+		}
+		
+		app.subscribeToUpdates(req.query.topic, (response) => {
+			res.send(response);
+		});
+		
 	});
 	
 };

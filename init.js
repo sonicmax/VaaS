@@ -18,8 +18,9 @@ var currentToken;
 var express = require("express");
 var request = require("request");
 var bodyParser = require("body-parser");
-var cheerio = require('cheerio');
-var client = require('redis').createClient(process.env.REDIS_URL);
+var cheerio = require('cheerio'); // HTML parser
+var UINT64 = require('cuint').UINT64; // Unsigned integers for Javascript
+var client = require('redis').createClient(process.env.REDIS_URL); // DB
 
 // Set up app
 var app = express();
@@ -221,6 +222,39 @@ app.initBot = function(topicId, msg, onSuccess) {
 	}
 };
 
+app.subscribeToUpdates = function(topicId, callback) {
+	const ENDPOINT = "https://evt0.endoftheinter.net/subscribe";
+	
+	var topicPayload = UINT64(0x0200).shiftLeft(UINT64(48)).or(UINT64(topicId));
+	var pmPayload = UINT64(0x0100).shiftLeft(UINT64(48)).or(UINT64(process.env.USER_ID));
+	
+	var payload = {};
+	payload[pmPayload] = 0;
+	payload[topicPayload] = 1;
+	
+	console.log(JSON.stringify(payload));
+	
+		request.post({
+			
+			headers: {
+					"content-type": "text/plain;charset=UTF-8",
+					"Connection": "keep-alive"
+			},
+			timeout: 600000, // 60s
+			url: ENDPOINT,
+			body: JSON.stringify(payload),
+			jar: app.cookieJar
+			
+		}, (error, response, body) => {
+									
+				if (!error && response.statusCode === 200) {
+					var parsedResponse = JSON.parse(body.replace("}{", "{"));
+					callback(parsedResponse);
+				}
+				
+		});
+};
+
 app.getTopicList = function(onSuccess) {
 	var LUE_TOPICS = "https://boards.endoftheinter.net/topics/LUE-CJ-Anonymous-NWS-NLS";
 	
@@ -265,7 +299,6 @@ app.getTopicList = function(onSuccess) {
 		
 		else {
 			console.log("Topic list GET failed.");
-			throw error;
 		}
 		
 	});
@@ -284,7 +317,8 @@ app.getMessageList = function(topicId, msg, onSuccess) {
 			
 			var $ = cheerio.load(body);
 			// Can't make POST requests without the value of this token, scraped from quickpost area
-			currentToken = $('input[name="h"]').attr('value');			
+			currentToken = $('input[name="h"]').attr('value');
+			// If msg is undefined, generate markov chain output
 			app.contributeToDiscussion(topicId, msg || app.generateMarkovChain(true), onSuccess);
 		}
 		
