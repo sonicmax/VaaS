@@ -27,7 +27,7 @@ var appRouter = function(app) {
 		app.initBot(target, null, (response) => {
 		
 			if (response === "post failed") {
-				res.send({ "status: ": response)};
+				res.send({ "status: ": response});
 			}
 			
 			else {		
