@@ -146,26 +146,34 @@ app.generateNextWord = function() {
   */
 	
 app.addNewQuotes = function(url, onSuccess) {
+	
 	request.get(url, ((error, response, body) => {
+		
 		if (!error && response.statusCode == 200) {
 			// Ignore blank lines, 
 			var quotes = body.split("\r\n").filter((line) => line && line.indexOf("&lt;") == -1 && line.charAt(0) !== "<");
 			
 			client.lrange("quotes", 0, -1, (error, items) => {
+				
 				if (error) {
 					onSuccess(false);
 					throw error;
 				}
+				
 				else {
 					// Update local & disk cache
 					input = input.concat(quotes);
-					client.rpush.apply(client, ["quotes"].concat(quotes).concat(() => { console.log("Quotes stored to redis") }));
-					onSuccess(true);
+					
+					client.rpush.apply(client, ["quotes"].concat(quotes).concat(() => {
+						
+						console.log("Quotes stored to redis");
+						onSuccess(true);
+						
+					}));																														
 				}
+				
 			});	
-		
-		}
-		
+		}	
 	}));
 };
 
@@ -194,12 +202,13 @@ app.initBot = function(topicId, onSuccess) {
 					console.log("Logged in successfully.");
 					app.isLoggedIn = true;
 					
-					if (!topicId) {
-						app.getTopicList(onSuccess);
+					if (topicId !== false) {
+						currentTopicId = topicId;
+						app.getMessageList(currentTopicId, onSuccess);
 					}
 					
 					else {
-						app.getMessageList(topicId, onSuccess)						
+						app.getTopicList(onSuccess);						
 					}
 				}
 				
@@ -212,7 +221,8 @@ app.initBot = function(topicId, onSuccess) {
 	
 	else {
 		if (topicId) {
-			app.getMessageList(topicId, onSuccess);
+			currentTopicId = topicId;
+			app.getMessageList(currentTopicId, onSuccess);
 		}
 		
 		else {			
