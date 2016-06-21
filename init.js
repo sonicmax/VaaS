@@ -142,10 +142,14 @@ app.generateNextWord = function() {
 
 /**
   *	Method which allows us to add new quotes from pastebin raw links
-  *	Calls onSuccess with truthy value after quotes have been pushed to Redis
+  *	Calls callback with status after quotes have been pushed to Redis
   */
 	
-app.addNewQuotes = function(url, onSuccess) {
+app.addNewQuotes = function(url, callback) {
+	if (url.indexOf("://pastebin.com/raw/" === -1)) {
+		callback("ERROR: not raw pastebin link");
+	}
+	
 	request.get(url, ((error, response, body) => {
 		if (!error && response.statusCode == 200) {
 			// Ignore blank lines, 
@@ -153,14 +157,16 @@ app.addNewQuotes = function(url, onSuccess) {
 			
 			client.lrange("quotes", 0, -1, (error, items) => {
 				if (error) {
-					onSuccess(false);
+					callback("ERROR: fatal error in redis client");
 					throw error;
 				}
 				else {
 					// Update local & disk cache
 					input = input.concat(quotes);
-					client.rpush.apply(client, ["quotes"].concat(quotes).concat(() => { console.log("Quotes stored to redis") }));
-					onSuccess(true);
+					
+					client.rpush.apply(client, ["quotes"].concat(quotes).concat(() => {
+							callback("OK");
+					}));				
 				}
 			});	
 		
@@ -171,10 +177,10 @@ app.addNewQuotes = function(url, onSuccess) {
 
 /**
   *	Log into ETI using environment vars as credentials & do bot stuff
-  *	Calls back onSuccess method after successful POST to async-post.php
+  *	Calls back after successful POST to async-post.php
   */
 
-app.initBot = function(topicId, msg, onSuccess) {
+app.initBot = function(topicId, msg, callback) {
 	const LOGIN_URL = "https://endoftheinter.net/";
 	const formData = { b: process.env.USERNAME, p: process.env.PASSWORD };
 	
@@ -191,33 +197,32 @@ app.initBot = function(topicId, msg, onSuccess) {
 					
 				// After successful login, ETI will attempt to redirect you to homepage
 				if (!error && response.statusCode === 302) {
-					console.log("Logged in successfully.");
+					console.log("logged in successfully");
 					app.isLoggedIn = true;
 					
 					if (topicId) {
-						app.getMessageList(topicId, msg, onSuccess);
+						app.getMessageList(topicId, msg, callback);
 					}
 					
 					else {						
-						app.getTopicList(onSuccess);		
+						app.getTopicList(callback);		
 					}
 				}
 				
 				else {
-					console.log("Login failed.");
+					callback("ERROR: login failed");
 					app.isLoggedIn = false;
-					throw error;
 				}
 		});
 	}
 	
 	else {
 		if (topicId) {
-			app.getMessageList(topicId, msg, onSuccess);
+			app.getMessageList(topicId, msg, callback);
 		}
 		
 		else {			
-			app.getTopicList(onSuccess);		
+			app.getTopicList(callback);		
 		}
 	}
 };
@@ -250,7 +255,7 @@ app.subscribeToUpdates = function(topicId, pmCount, postCount, callback) {
 			jar: app.cookieJar
 			
 		}, (error, response, body) => {
-									
+													
 				if (!error && response.statusCode === 200) {
 					var parsedResponse = JSON.parse(body.replace("}{", "{"));
 					callback(parsedResponse);
@@ -259,7 +264,7 @@ app.subscribeToUpdates = function(topicId, pmCount, postCount, callback) {
 		});
 };
 
-app.getTopicList = function(onSuccess) {
+app.getTopicList = function(callback) {
 	var LUE_TOPICS = "https://boards.endoftheinter.net/topics/LUE-CJ-Anonymous-NWS-NLS";
 	
 	request({
@@ -298,17 +303,17 @@ app.getTopicList = function(onSuccess) {
 				
 			});
 			
-			app.getMessageList(topicId, null, onSuccess);
+			app.getMessageList(topicId, null, callback);
 		}
 		
 		else {
-			console.log("Topic list GET failed.");
+			callback("failed to load topic list");
 		}
 		
 	});
 };
 
-app.getMessageList = function(topicId, msg, onSuccess) {
+app.getMessageList = function(topicId, msg, callback) {
 	
 	request({
 		
@@ -323,18 +328,17 @@ app.getMessageList = function(topicId, msg, onSuccess) {
 			// Can't make POST requests without the value of this token, scraped from quickpost area
 			currentToken = $('input[name="h"]').attr('value');
 			// If msg is undefined, generate markov chain output
-			app.contributeToDiscussion(topicId, msg || app.generateMarkovChain(true), onSuccess);
+			app.contributeToDiscussion(topicId, msg || app.generateMarkovChain(true), callback);
 		}
 		
 		else {
-			console.log("Topic list GET failed.");
-			throw error;
+			callback("failed to load message list. topic id: ", topicId);
 		}
 		
 	});
 };
 
-app.contributeToDiscussion = function(topicId, msg, onSuccess) {
+app.contributeToDiscussion = function(topicId, msg, callback) {
 	const QUICKPOST_URL = "https://boards.endoftheinter.net/async-post.php";
 	
 	var formData = {
@@ -352,14 +356,12 @@ app.contributeToDiscussion = function(topicId, msg, onSuccess) {
 	}, (error, response, body) => {
 		
 			if (!error && response.statusCode === 200) {
-				// Callback onSuccess with topic id
-				console.log("Post successful @", topicId);
-				onSuccess(topicId);
+				// Callback with topic id				
+				callback(topicId);
 			}
 		
 			else {
-				console.log("Post unsuccessful.");
-				throw error;
+				callback("post failed");
 			}
 		
 	});

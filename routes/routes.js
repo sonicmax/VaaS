@@ -15,7 +15,7 @@ var appRouter = function(app) {
 	app.get("/testbot", (req, res) => {
 		
 		if (req.query.token !== process.env.TOKEN) {
-			return;
+			res.send({ "status: ": "ERROR: invalid query parameters" });
 		}		
 		
 		var target;
@@ -24,13 +24,20 @@ var appRouter = function(app) {
 			target = req.query.topic;
 		}
 
-		app.initBot(target, null, (topicId) => {
+		app.initBot(target, null, (response) => {
 		
-			res.writeHead(302, {
-				Location: "https://boards.endoftheinter.net/showmessages.php?topic=" + topicId
-			});
+			if (response === "post failed") {
+				res.send({ "status: ": response)};
+			}
 			
-			res.end();
+			else {		
+				res.writeHead(302, {
+					Location: "https://boards.endoftheinter.net/showmessages.php?topic=" + response
+				});
+				
+				res.end();
+			}
+			
 		});
 		
 	});
@@ -38,7 +45,7 @@ var appRouter = function(app) {
 	app.get("/reply", (req, res) => {
 		
 		if (req.query.token !== process.env.TOKEN	|| !req.query.topic || !req.query.msg) {
-			return;
+			res.send({ "status: ": "ERROR: invalid query parameters" });
 		}
 
 		app.initBot(req.query.topic, req.query.msg, (topicId) => {
@@ -54,12 +61,12 @@ var appRouter = function(app) {
 	
 	app.get("/pastebin", (req, res) => {
 		if (req.query.token !== process.env.TOKEN) {
-			res.send({ "quotes added": false });
+			res.send({ "status: ": "ERROR: invalid query parameters" });
 		}
 		
 		else {
-			app.addNewQuotes(req.query.url, (onSuccess) => {
-				res.send({ "quotes added": onSuccess });
+			app.addNewQuotes(req.query.url, (status) => {
+				res.send({ "status: ": status });
 			});			
 		}
 	});
