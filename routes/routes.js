@@ -13,19 +13,36 @@ var appRouter = function(app) {
 	
 	// Need to include token from Heroku settings as query paramater in POST requests to these routes
 	app.get("/testbot", (req, res) => {
+		
 		if (req.query.token !== process.env.TOKEN) {
 			return;
 		}		
 		
-		var target = false;
+		var target;
 		
 		if (req.query.topic) {
 			target = req.query.topic;
 		}
+
+		app.initBot(target, false, (topicId) => {
+		
+			res.writeHead(302, {
+				Location: "https://boards.endoftheinter.net/showmessages.php?topic=" + topicId
+			});
+			
+			res.end();
+			return;
+		});
+		
+	});
 	
-		// Chooses random topic if none is specified
-		app.initBot(target, (topicId) => {	
-			console.log("initBot success. posting in topic ", topicId);
+	app.get("/reply", (req, res) => {
+		
+		if (req.query.token !== process.env.TOKEN	|| !req.query.topic || !req.query.msg) {
+			return;
+		}
+
+		app.initBot(req.query.topic, req.query.msg, (topicId) => {
 			
 			res.writeHead(302, {
 				Location: "https://boards.endoftheinter.net/showmessages.php?topic=" + topicId
@@ -34,6 +51,7 @@ var appRouter = function(app) {
 			res.end();
 			return;
 		});
+		
 	});
 	
 	app.get("/pastebin", (req, res) => {
@@ -48,11 +66,6 @@ var appRouter = function(app) {
 		}
 	});
 	
-	/*app.get("get/list", (req, res) => {
-		if (req.query.token === process.env.TOKEN_2) {
-			return { posts: app.getPostsAsArray() };
-		}
-	});*/
 };
  
 module.exports = appRouter;

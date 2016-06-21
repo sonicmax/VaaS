@@ -12,7 +12,6 @@ var firstWords = [];
 var currentWord = "";
 
 // Variables required for bot
-var currentTopicId;
 var currentToken;
 
 // Set up modules
@@ -146,34 +145,26 @@ app.generateNextWord = function() {
   */
 	
 app.addNewQuotes = function(url, onSuccess) {
-	
 	request.get(url, ((error, response, body) => {
-		
 		if (!error && response.statusCode == 200) {
 			// Ignore blank lines, 
 			var quotes = body.split("\r\n").filter((line) => line && line.indexOf("&lt;") == -1 && line.charAt(0) !== "<");
 			
 			client.lrange("quotes", 0, -1, (error, items) => {
-				
 				if (error) {
 					onSuccess(false);
 					throw error;
 				}
-				
 				else {
 					// Update local & disk cache
 					input = input.concat(quotes);
-					
-					client.rpush.apply(client, ["quotes"].concat(quotes).concat(() => {
-						
-						console.log("Quotes stored to redis");
-						onSuccess(true);
-						
-					}));																														
+					client.rpush.apply(client, ["quotes"].concat(quotes).concat(() => { console.log("Quotes stored to redis") }));
+					onSuccess(true);
 				}
-				
 			});	
-		}	
+		
+		}
+		
 	}));
 };
 
@@ -182,7 +173,7 @@ app.addNewQuotes = function(url, onSuccess) {
   *	Calls back onSuccess method after successful POST to async-post.php
   */
 
-app.initBot = function(topicId, onSuccess) {
+app.initBot = function(topicId, msg, onSuccess) {
 	const LOGIN_URL = "https://endoftheinter.net/";
 	const formData = { b: process.env.USERNAME, p: process.env.PASSWORD };
 	
@@ -202,18 +193,18 @@ app.initBot = function(topicId, onSuccess) {
 					console.log("Logged in successfully.");
 					app.isLoggedIn = true;
 					
-					if (topicId !== false) {
-						currentTopicId = topicId;
-						app.getMessageList(currentTopicId, onSuccess);
+					if (topicId) {
+						app.getMessageList(topicId, msg, onSuccess);
 					}
 					
-					else {
-						app.getTopicList(onSuccess);						
+					else {						
+						app.getTopicList(onSuccess);		
 					}
 				}
 				
 				else {
 					console.log("Login failed.");
+					app.isLoggedIn = false;
 					throw error;
 				}
 		});
@@ -221,8 +212,7 @@ app.initBot = function(topicId, onSuccess) {
 	
 	else {
 		if (topicId) {
-			currentTopicId = topicId;
-			app.getMessageList(currentTopicId, onSuccess);
+			app.getMessageList(topicId, msg, onSuccess);
 		}
 		
 		else {			
@@ -245,18 +235,18 @@ app.getTopicList = function(onSuccess) {
 			// Find random topic to pester
 			var $ = cheerio.load(body);
 			var randomTopic = Math.floor(Math.random() * 50) + 1;
-			var href;
+			var topicId;
 			
 			// I don't understand the cheerio library. This is ridiculous. I don't care.
 			$('td.oh div.fl a').each((index, element) => {
 				
 				if (index === randomTopic) {
-					href = "https:" + $(element).attr('href');
+					var href = "https:" + $(element).attr('href');
 					var topicNumberRegex = href.match(/(topic=)([0-9]+)/);
 					
 					if (href !== "https:" && topicNumberRegex) {
 						console.log("Found topic to pester:", topicNumberRegex[2]);
-						currentTopicId = topicNumberRegex[2];
+						topicId = topicNumberRegex[2];
 						return false;
 					}
 					
@@ -270,7 +260,7 @@ app.getTopicList = function(onSuccess) {
 				
 			});
 			
-			app.getMessageList(onSuccess);
+			app.getMessageList(topicId, false, onSuccess);
 		}
 		
 		else {
@@ -281,15 +271,11 @@ app.getTopicList = function(onSuccess) {
 	});
 };
 
-app.getMessageList = function(topicQueryParameter, onSuccess) {
-	
-	if (topicQueryParameter) {
-		currentTopicId = topicQueryParameter;
-	}
+app.getMessageList = function(topicId, msg, onSuccess) {
 	
 	request({
 		
-		url: "https://boards.endoftheinter.net/showmessages.php?topic=" + currentTopicId,
+		url: "https://boards.endoftheinter.net/showmessages.php?topic=" + topicId,
 		jar: app.cookieJar
 		
 	}, (error, response, body) => {
@@ -298,8 +284,8 @@ app.getMessageList = function(topicQueryParameter, onSuccess) {
 			
 			var $ = cheerio.load(body);
 			// Can't make POST requests without the value of this token, scraped from quickpost area
-			currentToken = $('input[name="h"]').attr('value');
-			app.contributeToDiscussion(onSuccess);
+			currentToken = $('input[name="h"]').attr('value');			
+			app.contributeToDiscussion(topicId, msg || app.generateMarkovChain(true), onSuccess);
 		}
 		
 		else {
@@ -310,13 +296,13 @@ app.getMessageList = function(topicQueryParameter, onSuccess) {
 	});
 };
 
-app.contributeToDiscussion = function(onSuccess) {
+app.contributeToDiscussion = function(topicId, msg, onSuccess) {
 	const QUICKPOST_URL = "https://boards.endoftheinter.net/async-post.php";
 	
 	var formData = {
-			topic: currentTopicId,
+			topic: topicId,
 			h: currentToken,
-			message: app.generateMarkovChain(true) // Pass true to get return value immediately
+			message: msg
 	};
 			
 	request.post({
@@ -329,8 +315,8 @@ app.contributeToDiscussion = function(onSuccess) {
 		
 			if (!error && response.statusCode === 200) {
 				// Callback onSuccess with topic id
-				console.log("Post successful @", currentTopicId);
-				onSuccess(currentTopicId);
+				console.log("Post successful @", topicId);
+				onSuccess(topicId);
 			}
 		
 			else {
