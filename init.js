@@ -341,17 +341,17 @@ app.getMessageList = function(options, callback) {
 
 app.contributeToDiscussion = function(options, callback) {
 	const QUICKPOST_URL = "https://boards.endoftheinter.net/async-post.php";
-
-	var formData = {
-			topic: options.topicId,
-			h: options.currentToken,
-			message: options.msg
-	};
 			
 	request.post({
 		
 		uri: QUICKPOST_URL,
-		form: formData,
+
+		form: {
+			topic: options.topicId,
+			h: options.currentToken,
+			message: options.msg
+		},
+
 		jar: app.cookieJar
 
 	}, (error, response, body) => {
