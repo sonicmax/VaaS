@@ -241,8 +241,6 @@ app.subscribeToUpdates = function(topicId, pmCount, postCount, callback) {
 	payload[pmPayload] = pmCount || 0; // Return all messages by default
 	payload[topicPayload] = postCount || 1; // Returns total post count by default
 	
-	console.log(JSON.stringify(payload));
-	
 		request.post({
 			
 			headers: {
