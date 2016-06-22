@@ -301,6 +301,7 @@ app.getTopicList = function(options, callback) {
 		}
 		
 		else {
+			app.isLoggedIn = false; // Just as a precaution
 			callback("failed to load topic list");
 		}
 		
@@ -333,6 +334,7 @@ app.getMessageList = function(options, callback) {
 		}
 		
 		else {
+			app.isLoggedIn = false; // Just as a precaution
 			callback("failed to load message list. topic id: ", options.topicId);
 		}
 		
@@ -362,7 +364,8 @@ app.contributeToDiscussion = function(options, callback) {
 			}
 		
 			else {
-				callback("post failed");
+				app.isLoggedIn = false; // Just as a precaution
+				callback("Error while contributingToDiscussion. Status code:", response.statusCode);				
 			}
 		
 	});
