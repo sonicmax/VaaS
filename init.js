@@ -247,6 +247,7 @@ app.subscribeToUpdates = function(topicId, pmCount, postCount, callback) {
 					"content-type": "text/plain;charset=UTF-8",
 					"Connection": "keep-alive"
 			},
+			
 			timeout: 600000, // 60s
 			url: ENDPOINT,
 			body: JSON.stringify(payload),
