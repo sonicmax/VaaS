@@ -1,6 +1,6 @@
 var appRouter = function(app) {
 	const DEFAULT_RESPONSE = { "post": "fhuuump" }; // silenced shotgun sound for error handling/secret reasons
-	
+
 	app.get("/", (req, res) => {
 			if (app.cachedData.post !== "") {
 				res.send(app.cachedData);
@@ -16,15 +16,15 @@ var appRouter = function(app) {
 		
 		if (req.query.token !== process.env.TOKEN) {
 			res.send({ "status: ": "ERROR: invalid query parameters" });
-		}		
-		
-		var target;
-		
-		if (req.query.topic) {
-			target = req.query.topic;
 		}
 
-		app.initBot(target, null, (response) => {
+		app.initBot({
+
+				"topicId": req.query.topic,
+				"msg": null,
+				"firstWord": req.query.word
+
+		}, (response) => {
 		
 			if (response === "post failed") {
 				res.send({ "status: ": response});
@@ -38,8 +38,7 @@ var appRouter = function(app) {
 				res.end();
 			}
 			
-		});
-		
+		});		
 	});
 	
 	app.get("/reply", (req, res) => {
@@ -48,7 +47,13 @@ var appRouter = function(app) {
 			res.send({ "status: ": "ERROR: invalid query parameters" });
 		}
 
-		app.initBot(req.query.topic, req.query.msg, (topicId) => {
+		app.initBot({
+				
+				"topicId": topicId,
+				"msg": msg,
+				"firstWord": firstWord
+	
+		}, (topicId) => {
 			
 			res.writeHead(302, {
 				Location: "https://boards.endoftheinter.net/showmessages.php?topic=" + topicId
@@ -77,7 +82,13 @@ var appRouter = function(app) {
 			res.send(DEFAULT_RESPONSE);
 		}
 		
-		app.subscribeToUpdates(req.query.topic, null, null, (response) => {
+		app.subscribeToUpdates({
+
+				"topic": req.query.topic, 
+				"msg": null, 
+				"word": null
+
+		}, (response) => {
 			res.send(response);
 		});
 		

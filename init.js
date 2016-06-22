@@ -11,9 +11,6 @@ var input = [];
 var firstWords = [];
 var currentWord = "";
 
-// Variables required for bot
-var currentToken;
-
 // Set up modules
 var express = require("express");
 var request = require("request");
@@ -52,7 +49,7 @@ client.on("connect", () => {
 			else {
 				input = items;
 				if (input.length > 0) {
-					app.generateMarkovChain();
+					app.generateMarkovChain(false, null);
 				}
 			}
 		});				
@@ -63,18 +60,18 @@ client.on("connect", () => {
   *	Markov chain methods 
   */
 
-app.generateMarkovChain = function(shouldReturn) {
+app.generateMarkovChain = function(shouldReturn, firstWord) {
 	var output = [];
 	
 	app.createArrays();
 	
 	// Pick random first word to start with
-	currentWord = firstWords[Math.floor((Math.random() * firstWords.length))];	
+	currentWord = firstWord || firstWords[Math.floor((Math.random() * firstWords.length))];	
 	
 	for (let i = 0, len = app.getPostLength(); i < len; i++) {
 		if (currentWord !== "") {
 			output.push(currentWord);
-		}		
+		}
 		
 		var nextWord = app.generateNextWord();
 		
@@ -180,7 +177,7 @@ app.addNewQuotes = function(url, callback) {
   *	Calls back after successful POST to async-post.php
   */
 
-app.initBot = function(topicId, msg, callback) {
+app.initBot = function(options, callback) {
 	const LOGIN_URL = "https://endoftheinter.net/";
 	const formData = { b: process.env.USERNAME, p: process.env.PASSWORD };
 	
@@ -197,15 +194,14 @@ app.initBot = function(topicId, msg, callback) {
 					
 				// After successful login, ETI will attempt to redirect you to homepage
 				if (!error && response.statusCode === 302) {
-					console.log("logged in successfully");
 					app.isLoggedIn = true;
 					
-					if (topicId) {
-						app.getMessageList(topicId, msg, callback);
+					if (options.topicId) {
+						app.getMessageList(options, callback);
 					}
 					
 					else {						
-						app.getTopicList(callback);		
+						app.getTopicList(options, callback);		
 					}
 				}
 				
@@ -217,12 +213,12 @@ app.initBot = function(topicId, msg, callback) {
 	}
 	
 	else {
-		if (topicId) {
-			app.getMessageList(topicId, msg, callback);
+		if (options.topicId) {
+			app.getMessageList(options, callback);
 		}
 		
-		else {			
-			app.getTopicList(callback);		
+		else {	
+			app.getTopicList(options, callback);		
 		}
 	}
 };
@@ -231,15 +227,15 @@ app.initBot = function(topicId, msg, callback) {
   *	Allows us to find current number of unread PMs and number of posts in topic.
   */
 
-app.subscribeToUpdates = function(topicId, pmCount, postCount, callback) {
+app.subscribeToUpdates = function(options, callback) {
 	const ENDPOINT = "https://evt0.endoftheinter.net/subscribe";
 	
-	var topicPayload = UINT64(0x0200).shiftLeft(UINT64(48)).or(UINT64(topicId));
+	var topicPayload = UINT64(0x0200).shiftLeft(UINT64(48)).or(UINT64(options.topicId));
 	var pmPayload = UINT64(0x0100).shiftLeft(UINT64(48)).or(UINT64(process.env.USER_ID));
 	
 	var payload = {};
-	payload[pmPayload] = pmCount || 0; // Return all messages by default
-	payload[topicPayload] = postCount || 1; // Returns total post count by default
+	payload[pmPayload] = options.pmCount || 0; // Return all messages by default
+	payload[topicPayload] = options.postCount || 1; // Returns total post count by default
 	
 		request.post({
 			
@@ -263,7 +259,7 @@ app.subscribeToUpdates = function(topicId, pmCount, postCount, callback) {
 		});
 };
 
-app.getTopicList = function(callback) {
+app.getTopicList = function(options, callback) {
 	var LUE_TOPICS = "https://boards.endoftheinter.net/topics/LUE-CJ-Anonymous-NWS-NLS";
 	
 	request({
@@ -277,7 +273,6 @@ app.getTopicList = function(callback) {
 			// Find random topic to pester
 			var $ = cheerio.load(body);
 			var randomTopic = Math.floor(Math.random() * 50) + 1;
-			var topicId;
 			
 			// I don't understand the cheerio library. This is ridiculous. I don't care.
 			$('td.oh div.fl a').each((index, element) => {
@@ -288,7 +283,7 @@ app.getTopicList = function(callback) {
 					
 					if (href !== "https:" && topicNumberRegex) {
 						console.log("Found topic to pester:", topicNumberRegex[2]);
-						topicId = topicNumberRegex[2];
+						options.topicId = topicNumberRegex[2];
 						return false;
 					}
 					
@@ -302,7 +297,7 @@ app.getTopicList = function(callback) {
 				
 			});
 			
-			app.getMessageList(topicId, null, callback);
+			app.getMessageList(options, callback);
 		}
 		
 		else {
@@ -312,11 +307,11 @@ app.getTopicList = function(callback) {
 	});
 };
 
-app.getMessageList = function(topicId, msg, callback) {
+app.getMessageList = function(options, callback) {
 	
 	request({
 		
-		url: "https://boards.endoftheinter.net/showmessages.php?topic=" + topicId,
+		url: "https://boards.endoftheinter.net/showmessages.php?topic=" + options.topicId,
 		jar: app.cookieJar
 		
 	}, (error, response, body) => {
@@ -325,25 +320,32 @@ app.getMessageList = function(topicId, msg, callback) {
 			
 			var $ = cheerio.load(body);
 			// Can't make POST requests without the value of this token, scraped from quickpost area
-			currentToken = $('input[name="h"]').attr('value');
-			// If msg is undefined, generate markov chain output
-			app.contributeToDiscussion(topicId, msg || app.generateMarkovChain(true), callback);
+			options.currentToken = $('input[name="h"]').attr('value');
+			
+			app.contributeToDiscussion({
+
+					"topicId": options.topicId,
+					// If msg is undefined, generate markov chain output
+					"msg": options.msg || app.generateMarkovChain(true, options.firstWord),
+					"currentToken": options.currentToken
+
+			}, callback);
 		}
 		
 		else {
-			callback("failed to load message list. topic id: ", topicId);
+			callback("failed to load message list. topic id: ", options.topicId);
 		}
 		
 	});
 };
 
-app.contributeToDiscussion = function(topicId, msg, callback) {
+app.contributeToDiscussion = function(options, callback) {
 	const QUICKPOST_URL = "https://boards.endoftheinter.net/async-post.php";
-	
+
 	var formData = {
-			topic: topicId,
-			h: currentToken,
-			message: msg
+			topic: options.topicId,
+			h: options.currentToken,
+			message: options.msg
 	};
 			
 	request.post({
@@ -356,7 +358,7 @@ app.contributeToDiscussion = function(topicId, msg, callback) {
 		
 			if (!error && response.statusCode === 200) {
 				// Callback with topic id				
-				callback(topicId);
+				callback(options.topicId);
 			}
 		
 			else {
