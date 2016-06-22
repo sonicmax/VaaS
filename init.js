@@ -145,6 +145,7 @@ app.generateNextWord = function() {
 app.addNewQuotes = function(url, callback) {
 	if (url.indexOf("://pastebin.com/raw/" === -1)) {
 		callback("ERROR: not raw pastebin link");
+		return;
 	}
 	
 	request.get(url, ((error, response, body) => {
