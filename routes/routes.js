@@ -76,8 +76,9 @@ var appRouter = function(app) {
 		
 		else {
 			// Attempt to add quotes from pastebin link, callback with status of operation
-			api.addNewQuotes(req.query.url, (status) => { res.send( { "status:": status } )};
+			api.addNewQuotes(req.query.url, (status) => { res.send( { "status:": status } )});
 		}
+		
 	});
 	
 	
