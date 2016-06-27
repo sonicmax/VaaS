@@ -114,7 +114,7 @@ var markovChain = function() {
 				// Pick random entry from input & find its length
 				var postLength = input[Math.floor((Math.random() * input.length))].length;
 				
-				for (let i = 0, i < postLength; i++) {
+				for (let i = 0; i < postLength; i++) {
 					if (currentWord !== "") {
 						output.push(currentWord);
 					}
