@@ -22,21 +22,16 @@ app.cookieJar = request.jar(); // Global cookie store
 app.cachedData = { "post": "" }; // Basic format for JSON response
 app.isLoggedIn = false;
 
-// Set up routing for API
-var routes = require("./routes/routes.js")(app);
+// NOTE -routing setup is at end of file
 
 // Set up server
 var server = app.listen(process.env.PORT || LOCAL_HOST, () => {
 	console.log(process.env.USERNAME + "-bot is sentient and ready to shitpost");
 });
 
-
-/**
-  *	Redis db handler 
-  */
-
+// Attempt to get "quotes" array from Redis
 client.on("connect", () => {
-	// Attempt to get "quotes" array from Redis
+	
 	client.lrange("quotes", 0, -1, (error, items) => {
 		
 		if (error) {
@@ -48,7 +43,7 @@ client.on("connect", () => {
 			markovChain.generate(false, null);
 		}
 		
-	});				
+	});	
 });
 
 
@@ -105,7 +100,7 @@ var markovChain = function() {
 		createArrays();
 		
 		// Pick random entry from input & find its length
-		var postLength = input[Math.floor((Math.random() * input.length))].length;			
+		var postLength = input[Math.floor((Math.random() * input.length))].length;
 
 		// Use specified or random first word
 		currentWord = firstWord || firstWords[Math.floor((Math.random() * firstWords.length))];		
@@ -283,7 +278,7 @@ var eti = function() {
 	
 	/**
 		*	Allows us to find current number of unread PMs and number of posts in topic.
-		* Polling this means we can keep up with replies, react to keywords, etc
+		* Polling this & scraping moremessages.php means we can keep up with replies, react to keywords, etc
 		*/
 
 	var subscribe = function(options, callback) {
@@ -420,3 +415,6 @@ var eti = function() {
 	};
 
 }();
+
+// Set up routing for API
+var routes = require("./routes/routes.js")(app, markovChain, api, eti);
