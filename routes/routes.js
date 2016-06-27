@@ -11,12 +11,7 @@ var appRouter = function(app) {
 			}
 	});
 	
-	// Need to include token from Heroku settings as query paramater in POST requests to these routes
 	app.get("/testbot", (req, res) => {
-		
-		if (req.query.token !== process.env.TOKEN) {
-			res.send({ "status: ": "ERROR: invalid query parameters" });
-		}
 
 		app.initBot({
 
@@ -27,7 +22,7 @@ var appRouter = function(app) {
 		}, (response) => {
 		
 			if (response === "post failed") {
-				res.send({ "status: ": response});
+				res.send({ "status:": response});
 			}
 			
 			else {		
@@ -44,7 +39,7 @@ var appRouter = function(app) {
 	app.get("/reply", (req, res) => {
 		
 		if (req.query.token !== process.env.TOKEN	|| !req.query.topic || !req.query.msg) {
-			res.send({ "status: ": "ERROR: invalid query parameters" });
+			res.send({ "status:": "ERROR: invalid query parameters" });
 		}
 
 		app.initBot({
@@ -60,18 +55,19 @@ var appRouter = function(app) {
 			});
 			
 			res.end();
+			
 		});
 		
 	});
 	
 	app.get("/pastebin", (req, res) => {
 		if (req.query.token !== process.env.TOKEN) {
-			res.send({ "status: ": "ERROR: invalid query parameters" });
+			res.send({ "status:": "ERROR: invalid query parameters" });
 		}
 		
 		else {
 			app.addNewQuotes(req.query.url, (status) => {
-				res.send({ "status: ": status });
+				res.send({ "status:": status });
 			});			
 		}
 	});
@@ -88,9 +84,7 @@ var appRouter = function(app) {
 				"msg": null, 
 				"word": null
 
-		}, (response) => {
-			res.send(response);
-		});
+		}, (response) => { res.send(response) });
 		
 	});
 	
