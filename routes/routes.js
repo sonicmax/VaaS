@@ -62,8 +62,7 @@ var appRouter = function(app) {
 				Location: "https://boards.endoftheinter.net/showmessages.php?topic=" + topicId
 			});
 			
-			res.end();
-			
+			res.end();			
 		});
 		
 	});
@@ -76,8 +75,8 @@ var appRouter = function(app) {
 		}
 		
 		else {
-			// Attempt to add quotes from pastebin link, callback with status
-			api.addNewQuotes(req.query.url, (status) => { res.send({ "status:", status }) };
+			// Attempt to add quotes from pastebin link, callback with status of operation
+			api.addNewQuotes(req.query.url, (status) => { res.send( { "status:": status } )};
 		}
 	});
 	
@@ -97,7 +96,6 @@ var appRouter = function(app) {
 		}, (response) => { res.send(response) });
 		
 	});
-	
 };
  
 module.exports = appRouter;
