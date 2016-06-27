@@ -125,10 +125,10 @@ var markovChain = function() {
 			}
 		}
 		
-		cachedData.post = output.join(" ").trim();
+		app.cachedData.post = output.join(" ").trim();
 		
 		if (shouldReturn) {		
-			return cachedData.post;
+			return app.cachedData.post;
 		}			
 	};
 	
