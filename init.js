@@ -417,4 +417,4 @@ var eti = function() {
 }();
 
 // Set up routing for API
-var routes = require("./routes/routes.js")(app, markovChain, api, eti);
+var routes = require("./routes/routes.js")(app, markovChain, bot, api, eti); // I HATE THIS
