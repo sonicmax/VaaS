@@ -1,4 +1,4 @@
-var appRouter = function(app, markovChain, api, eti) {
+var appRouter = function(app, markovChain, bot, api, eti) {
 	const DEFAULT_RESPONSE = { "post": "fhuuump" }; // silenced shotgun sound for error handling/secret reasons
 
 	app.get("/", (req, res) => {
