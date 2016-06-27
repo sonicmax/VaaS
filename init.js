@@ -373,7 +373,7 @@ var eti = function() {
 			
 			else {
 				app.isLoggedIn = false; // Just as a precaution
-				callback("ERROR: failed to load topic list")";
+				callback("ERROR: failed to load topic list");
 			}
 			
 		});
