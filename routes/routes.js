@@ -76,9 +76,8 @@ var appRouter = function(app) {
 		}
 		
 		else {
-			api.addNewQuotes(req.query.url, (status) => {
-				res.send({ "status:": status });
-			});			
+			// Attempt to add quotes from pastebin link, callback with status
+			api.addNewQuotes(req.query.url, (status) => { res.send({ "status:", status }) };
 		}
 	});
 	
@@ -88,8 +87,8 @@ var appRouter = function(app) {
 		if (req.query.token !== process.env.TOKEN || !req.query.topic) {			
 			res.send(DEFAULT_RESPONSE);
 		}
-		
-		eti.subscribeToUpdates({
+				
+		eti.subscribe({
 
 				"topic": req.query.topic, 
 				"msg": null, 

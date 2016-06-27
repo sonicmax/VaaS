@@ -412,7 +412,7 @@ var eti = function() {
 	};
 	
 	return {
-		"subscribeToUpdates": subscribeToUpdates,
+		"subscribe": subscribe,
 		"getTopicList": getTopicList,
 		"getMessageList": getMessageList
 	};
