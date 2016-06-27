@@ -41,14 +41,11 @@ client.on("connect", () => {
 		
 		if (error) {
 			// TODO: offer ability to use .txt files or other sources
-			// TODO: Configurable option
 		}
 		
-		else {
-			input = items;
-			if (input.length > 0) {
-				markovChain.generate(false, null);
-			}
+		else if (items.length > 0) {
+			markovChain.setInput(items);
+			markovChain.generate(false, null);
 		}
 		
 	});				
@@ -133,10 +130,15 @@ var markovChain = function() {
 		if (shouldReturn) {		
 			return cachedData.post;
 		}			
-	};	
+	};
+	
+	var setInput = function(dbArray) {
+		input = dbArray;
+	}
 	
 	return {
-		"generate": generate
+		"generate": generate,
+		"setInput": setInput		
 	};
 	
 }();
