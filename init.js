@@ -101,40 +101,42 @@ var markovChain = function() {
 			return;
 		}
 	};
+		
+	var generate = function(shouldReturn, firstWord) {
+		var output = [];
+		
+		createArrays();
+		
+		// Pick random entry from input & find its length
+		var postLength = input[Math.floor((Math.random() * input.length))].length;			
+
+		// Use specified or random first word
+		currentWord = firstWord || firstWords[Math.floor((Math.random() * firstWords.length))];		
+		
+		for (let i = 0; i < postLength; i++) {
+			if (currentWord !== "") {
+				output.push(currentWord);
+			}
+			
+			var nextWord = generateNextWord();
+			
+			if (nextWord) {
+				currentWord = nextWord;
+			}
+			else {
+				currentWord = "";
+			}
+		}
+		
+		cachedData.post = output.join(" ").trim();
+		
+		if (shouldReturn) {		
+			return cachedData.post;
+		}			
+	};	
 	
 	return {
-		"generate": (shouldReturn, firstWord) => {
-				var output = [];
-				
-				createArrays();
-				
-				// Use specified or random first word
-				currentWord = firstWord || firstWords[Math.floor((Math.random() * firstWords.length))];	
-				
-				// Pick random entry from input & find its length
-				var postLength = input[Math.floor((Math.random() * input.length))].length;
-				
-				for (let i = 0; i < postLength; i++) {
-					if (currentWord !== "") {
-						output.push(currentWord);
-					}
-					
-					var nextWord = generateNextWord();
-					
-					if (nextWord) {
-						currentWord = nextWord;
-					}
-					else {
-						currentWord = "";
-					}
-				}
-				
-				cachedData.post = output.join(" ").trim();
-				
-				if (shouldReturn) {				
-					return cachedData.post;
-				}			
-		};
+		"generate": generate
 	};
 	
 }();
@@ -220,8 +222,8 @@ var bot = function() {
 					}
 					
 					else {
-						callback("ERROR: login failed");
 						app.isLoggedIn = false;
+						callback("ERROR: login failed. check username/password");						
 					}
 			});
 		}
