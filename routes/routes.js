@@ -3,15 +3,14 @@ var appRouter = function(app, markovChain, bot, api, eti) {
 
 	app.get("/", (req, res) => {
 		
-			if (app.cachedData.post !== "") {
-				// TODO: We might have to implement some kind of queue here?
-				res.send(app.cachedData);
-				markovChain.generate();
-			}
-			
-			else {
-				res.send(DEFAULT_RESPONSE);
-			}
+		if (app.cachedData.post !== "") {
+			res.send(app.cachedData);
+			markovChain.generate();
+		}
+		
+		else {
+			res.send(DEFAULT_RESPONSE);
+		}
 			
 	});
 	
