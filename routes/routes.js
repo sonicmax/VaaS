@@ -24,7 +24,7 @@ var appRouter = function(app, markovChain, bot, api, eti) {
 
 		}, (response) => {
 			
-			// The bot should respond with the topic id, so we can just check isNaN to handle errors
+			// The bot should respond with the topic id, so we can just check isNaN to 'handle errors'
 			if (parseInt(response, 10).isNaN()) {
 				res.send({ "status:": response });
 			}
