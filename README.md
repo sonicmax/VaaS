@@ -3,13 +3,11 @@
 
 Demo: http://sonicmax.github.io/VaaS
 
-API: http://vaas.herokuapp.com/
-
 Sample response:
 
 <pre>{ "post": "fhuuump" }</pre>
 
-<i>hey i wanna use this thing!</i>
+<i>hey i wanna use this thing!</i>	
 
 		1) Download this repo
 		2 a) make free Heroku account
@@ -24,6 +22,7 @@ Sample response:
 		
 				USERNAME - ETI username
 				PASSWORD - ETI password
+				USER_ID - ETI user ID
 				TOKEN - used to restrict access to certain parts of the API
 				(REDIS_URL should already be there if you remembered to install the Heroku Redis app)
 			
@@ -32,7 +31,7 @@ Sample response:
 		4) compile sample text of sentences separated by linebreaks, 
 				and upload to pastebin (bear with me here). keep the raw url handy...
 		
-		5) go to this URL in your browswer of choice: 
+		5) visit this URL in your browswer of choice: 
 				https://myappname.herokuapp.com/pastebin?token=TOKEN&url=PASTEBIN_RAW_URL
 				
 				responds with:
@@ -40,7 +39,6 @@ Sample response:
 		
 		7) visit https://myappname.herokuapp.com/ to see some quick output
 		
-		8) visit https://myappname.herokuapp.com/testbot?token=TOKEN to post in a random LUE topic 
+		8) visit https://myappname.herokuapp.com/testbot to post in a random LUE topic
 		
 		9) have fun
- 
