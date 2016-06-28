@@ -21,7 +21,6 @@ var appRouter = function(app, markovChain, bot, api, eti) {
 		bot.init({
 
 				"topicId": req.query.topic,
-				"msg": null,
 				"firstWord": req.query.word
 
 		}, (response) => {
@@ -52,9 +51,8 @@ var appRouter = function(app, markovChain, bot, api, eti) {
 
 		bot.init({
 				
-				"topicId": topicId,
-				"msg": msg,
-				"firstWord": firstWord
+				"topicId": req.query.topic,
+				"msg": req.query.msg
 	
 		}, (topicId) => {
 			
@@ -71,7 +69,7 @@ var appRouter = function(app, markovChain, bot, api, eti) {
 	app.get("/pastebin", (req, res) => {
 		
 		if (req.query.token !== process.env.TOKEN) {
-			res.send({ "status:": "ERROR: invalid query parameters" });
+			res.send({ "status:": "access denied" });
 		}
 		
 		else {
@@ -88,13 +86,7 @@ var appRouter = function(app, markovChain, bot, api, eti) {
 			res.send(DEFAULT_RESPONSE);
 		}
 				
-		eti.subscribe({
-
-				"topic": req.query.topic, 
-				"msg": null, 
-				"word": null
-
-		}, (response) => { res.send(response) });
+		eti.subscribe({"topic": req.query.topic}, (response) => { res.send(response) });
 		
 	});
 };
