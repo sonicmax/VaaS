@@ -24,14 +24,14 @@ var appRouter = function(app, markovChain, bot, api, eti) {
 				"firstWord": req.query.word
 
 		}, (response) => {
-		
-			if (response === "post failed") {
+			
+			// The bot should respond with the topic id, so we can just check isNaN to handle errors
+			if (parseInt(response, 10).isNaN()) {
 				res.send({ "status:": response });
 			}
 			
 			else {
 				// Redirect user to topic which was just posted in.
-				// TODO: figure out exactly which message and give a contextual link? seems hard
 				res.writeHead(302, {
 						Location: "https://boards.endoftheinter.net/showmessages.php?topic=" + response
 				});
