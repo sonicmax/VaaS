@@ -46,7 +46,7 @@ var appRouter = function(app, markovChain, bot, api, eti) {
 	
 	app.get("/reply", (req, res) => {
 		
-		if (req.query.token !== process.env.TOKEN	|| !req.query.topic || !req.query.msg) {
+		if (!req.query.topic || !req.query.msg) {
 			res.send({ "status:": "ERROR: invalid query parameters" });
 		}
 
