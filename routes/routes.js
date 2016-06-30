@@ -121,9 +121,10 @@ var appRouter = function(app) {
 		eti.getMessageList(app, options, (response) => {
 			
 			bot.contributeToDiscussion(app, options, (response) => {
+				var topicId = parseInt(response, 10);
 				
-				if (typeof response !== "number") {
-					// Display error message
+				if (typeof response !== "number") {					
+					// This is probably redundant
 					return res.send({ "status:": response });
 				}
 				
