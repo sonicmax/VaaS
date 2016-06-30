@@ -2,9 +2,9 @@
   "name": "VaaS",
   "version": "4.2.0",
   "description": "Vesper as a service",
-  "main": "init.js",
+  "main": "app.js",
   "scripts": {
-    "start": "node init.js"
+    "start": "node app.js"
   },
   "dependencies": {
     "body-parser": "^1.15.1",
