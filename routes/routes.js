@@ -123,13 +123,13 @@ var appRouter = function(app) {
 			bot.contributeToDiscussion(app, options, (response) => {
 				var topicId = parseInt(response, 10);
 				
-				if (typeof response !== "number") {					
+				if (typeof topicId !== "number") {
 					// This is probably redundant
 					return res.send({ "status:": response });
 				}
 				
 				else {
-					redirectUser(res, "https://boards.endoftheinter.net/showmessages.php?topic=" + response);										
+					redirectUser(res, "https://boards.endoftheinter.net/showmessages.php?topic=" + topicId);										
 				}
 				
 			});								
