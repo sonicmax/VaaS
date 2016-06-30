@@ -13,14 +13,18 @@
 	
 	var animateEllipsis = function() {
 		// NOTE: Duplicate "..." strings in ellipsisStates array are intentional		
-		const ellipsisStates = [".", "..", "...", "...", "...", "..."];		
+		const FRAMES = [".", "..", "...", "...", "...", "..."];		
+		const OPEN_TAG = "<span class='loading-text'>";
+		const CLOSE_TAG = "</span>";
+		
 		var state = 0;
 		
-		post.innerHTML = "waiting for server" + ellipsisStates[state];
+		updatePost(OPEN_TAG + "waiting for server" + FRAMES[state] + CLOSE_TAG);	
 		
 		animationId = setInterval(() => {
 			
-			post.innerHTML = "waiting for server" + ellipsisStates[state];
+			updatePost(OPEN_TAG + "waiting for server" + FRAMES[state] + CLOSE_TAG);
+			
 			state++;
 			
 			if (state > 5) {
@@ -72,6 +76,7 @@
 	};
 		
 	var updatePost = function(content) {
+		updateTimestamp();
 		post.innerHTML = content;
 	};
 	
