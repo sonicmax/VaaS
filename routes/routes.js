@@ -24,7 +24,7 @@ var appRouter = function(app) {
 	app.get("/testbot", (req, res) => {
 		var options = {};
 		
-		bot.init(app, request, options, (response) => {
+		bot.init(app, req, options, (response) => {
 			var topicId = parseInt(response, 10);
 			
 			if (topicId.isNaN()) {
@@ -65,7 +65,7 @@ var appRouter = function(app) {
 		else {
 			var options = {};			
 			
-			bot.init(app, request, (topicId) => {
+			bot.init(app, req, (topicId) => {
 								
 				options.topicId = topicId;
 				options.msg = markovChain.generate(app, true, options.firstWord); 
