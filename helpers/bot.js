@@ -1,3 +1,5 @@
+var request = require("request");
+
 var bot = function() {
 	const LOGIN_URL = "https://endoftheinter.net/";
 	const formData = { b: process.env.USERNAME, p: process.env.PASSWORD };
@@ -7,7 +9,7 @@ var bot = function() {
   *  Calls back after successful POST to async-post.php
   */
 	
-	var init = function(app, request, options, callback) {
+	var init = function(app, options, callback) {
 		
 		if (!app.isLoggedIn) {
 			
@@ -25,11 +27,12 @@ var bot = function() {
 						app.isLoggedIn = true;
 						
 						if (options.topicId) {
-							eti.getMessageList(options, callback);
+							callback(options.topicId);
 						}
 						
-						else {						
-							eti.getTopicList(options, callback);		
+						else {
+							// Callback with 0 to indicate that we need to randomly pick topic
+							callback(0);
 						}
 					}
 					
@@ -52,7 +55,7 @@ var bot = function() {
 		}
 	};
 	
-	var contributeToDiscussion = function(app, request, options, callback) {
+	var contributeToDiscussion = function(app, options, callback) {
 		const QUICKPOST_URL = "https://boards.endoftheinter.net/async-post.php";
 				
 		request.post({

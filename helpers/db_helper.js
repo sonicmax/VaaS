@@ -1,3 +1,5 @@
+var request = require("request");
+
 var dbHelper = function() {
 		
 	/**
@@ -5,7 +7,7 @@ var dbHelper = function() {
 	  *  Calls back with status after quotes have been pushed to Redis
 	  */
 		
-	var addNewQuotes = function(request, app, callback) {
+	var addNewQuotes = function(app, callback) {
 		
 		var url = request.query.url;
 		

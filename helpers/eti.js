@@ -1,3 +1,4 @@
+var request = require("request");
 var cheerio = require("cheerio"); // HTML parser
 var UINT64 = require("cuint").UINT64; // Unsigned ints
 
@@ -8,7 +9,7 @@ var eti = function() {
     *  Polling this & scraping moremessages.php means we can keep up with replies, react to keywords, etc
     */
 
-	var subscribe = function(app, request, options, callback) {
+	var subscribe = function(app, options, callback) {
 		const ENDPOINT = "https://evt0.endoftheinter.net/subscribe";
 		const SIXTY_SECONDS = 600000;
 		
@@ -36,7 +37,7 @@ var eti = function() {
 		});
 	};
 		
-	var generateLivelinksPayload = function(app, request, options) {
+	var generateLivelinksPayload = function(app, options) {
 		const TOPIC_CHANNEL = 0x0200;
 		const PM_CHANNEL = 0x0100;
 		const MAGIC_CONSTANT = 48; // It just works
@@ -52,7 +53,7 @@ var eti = function() {
 		return payload;
 	};
 
-	var getTopicList = function(app, request, options, callback) {
+	var getTopicList = function(app, options, callback) {
 		var LUE_TOPICS = "https://boards.endoftheinter.net/topics/LUE-CJ-Anonymous-NWS-NLS";
 		
 		request({
@@ -80,7 +81,8 @@ var eti = function() {
 						}
 						
 						else {
-							// We can't really do anything useful here
+							// NOTE: Not an issue now, but attempting to view topic lists with < 50 topics 
+							// will probably break this method							
 							return false;
 						}
 					}
@@ -88,11 +90,11 @@ var eti = function() {
 				});
 				
 				if (options.topicId) {				
-					eti.getMessageList(options, callback);
+					getMessageList(app, options, callback);
 				}
 				
 				else {
-					callback("ERROR: your guess is as good as mine");
+					callback("ERROR: couldn't find topic using index of", randomTopic);
 				}
 			}
 			
@@ -104,7 +106,7 @@ var eti = function() {
 		});
 	};
 
-	var getMessageList = function(app, request, options, callback) {
+	var getMessageList = function(app, options, callback) {
 		
 		request({
 			
@@ -117,7 +119,7 @@ var eti = function() {
 				
 				var $ = cheerio.load(body);
 				// Can't make POST requests without the value of this token, scraped from quickpost area
-				options.currentToken = $('input[name="h"]').attr('value');			
+				options.currentToken = $('input[name="h"]').attr('value');
 				callback(options);
 			}
 			

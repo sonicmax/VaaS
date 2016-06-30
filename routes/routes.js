@@ -24,25 +24,28 @@ var appRouter = function(app) {
 	app.get("/testbot", (req, res) => {
 		var options = {};
 		
-		bot.init(app, req, options, (response) => {
+		bot.init(app, options, (response) => {
 			var topicId = parseInt(response, 10);
 			
-			if (topicId.isNaN()) {
-				// Error - do nothing
-				res.send({ "status:": response });
+			if (typeof topicId !== "number") {
+				// Respond with error message
+				return res.send({ "status:": response });				
 			}
 			
 			else if (topicId === 0) {
 				
 				options.topicId = topicId;
-				options.msg = markovChain.generate(app, true, options.firstWord); 
-				options.currentToken = response.currentToken;						
+				options.msg = markovChain.generate(app, true, options.firstWord);
 				
-				eti.getRandomTopic(options, (response) => { postInTopic(options) });								
+				eti.getTopicList(app, options, (response) => {
+				
+					return postInTopic(app, res, options);
+					
+				});						
 			}
 			
-			else {
-				postInTopic(res, options);
+			else {				
+				postInTopic(app, res, options);
 			}
 			
 		});
@@ -52,26 +55,24 @@ var appRouter = function(app) {
 	app.get("/reply", (req, res) => {
 		
 		if (!req.query.topic || !req.query.msg) {
-			res.send({ "status:": "ERROR: missing query parameters (needs topic & msg)" });
-			return;
+			return res.send({ "status:": "ERROR: missing query parameters (needs topic & msg)" });
 		}
 		
 		var topicId = parseInt(response, 10);
 		
-		if (topicId.isNaN()) {
-			res.send({ "status:": "ERROR: topic id is not a number" });
+		if (typeof topicId !== "number") {
+			return res.send({ "status:": "ERROR: topic id is not a number" });
 		}
 	
 		else {
 			var options = {};			
 			
-			bot.init(app, req, (topicId) => {
+			bot.init(app, (topicId) => {
 								
 				options.topicId = topicId;
-				options.msg = markovChain.generate(app, true, options.firstWord); 
-				options.currentToken = response.currentToken;						
+				options.msg = markovChain.generate(app, true, options.firstWord);					
 							
-				postInTopic(res, options);
+				postInTopic(app, res, options);
 				
 			});
 		}
@@ -82,7 +83,7 @@ var appRouter = function(app) {
 	app.get("/pastebin", (req, res) => {
 		
 		if (req.query.token !== process.env.TOKEN) {
-			res.send({ "status:": "access denied" });
+			return res.send({ "status:": "access denied" });
 		}
 		
 		else {
@@ -96,8 +97,8 @@ var appRouter = function(app) {
 	// TODO: after each request times out we need to create a new one. after 5-10 requests we should stop looking
 	app.get("/subscribe", (req, res) => {
 		
-		if (req.query.token !== process.env.TOKEN || !req.query.topic) {		
-			res.send(DEFAULT_RESPONSE);
+		if (req.query.token !== process.env.TOKEN || !req.query.topic) {
+			return res.send("ERROR: invalid token in env vars, or no topic was provided in query parameter");		
 		}
 				
 		eti.subscribe({"topic": req.query.topic}, (response) => { res.send(response) });
@@ -112,18 +113,18 @@ var appRouter = function(app) {
 				Location: url
 		});
 						
-		res.end();				
+		return res.end();				
 	};
 	
-	var postInTopic = function(res, options) {
+	var postInTopic = function(app, res, options) {
 		
-		eti.getMessageList(options, (response) => {
+		eti.getMessageList(app, options, (response) => {
 			
-			bot.contributeToDiscussion(options, (topicId) => {
+			bot.contributeToDiscussion(app, options, (response) => {
 				
-				if (parseInt(response, 10).isNaN()) {
-					// Probably an error message
-					res.send({ "status:": response });
+				if (typeof response !== "number") {
+					// Display error message
+					return res.send({ "status:": response });
 				}
 				
 				else {

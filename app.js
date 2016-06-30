@@ -19,12 +19,15 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.cookieJar = request.jar(); // Global cookie store
 app.cachedData = { "post": "" }; // Basic format for JSON response
 app.isLoggedIn = false;
+app.currentToken = null;
 
 // Set up routing for API
 var routes = require("./routes/routes.js")(app);
 
 // Set up server
 var server = app.listen(process.env.PORT || LOCAL_HOST, () => {
+	
+	// TODO: maybe we could check process.env here - to avoid error handling later on
 	
 	// Connect to db and retrieve quotes.
 	app.db = client.createClient(process.env.REDIS_URL);
@@ -35,17 +38,19 @@ var server = app.listen(process.env.PORT || LOCAL_HOST, () => {
 			
 			if (error) {	
 				console.log(process.env.USERNAME + "-bot init failed to load db. check that redis is configured correctly");
+				return;
 			}
 			
 			else if (items.length === 0) {
 				console.log(process.env.USERNAME + "-bot init success, but db was empty");
+				return;
 			}
 					
 			else {
 				// Pregenerate some text for first user
 				markovChain.setInput(items);
 				markovChain.generate(app, false, null);
-				console.log(process.env.USERNAME + "-bot init success");
+				console.log(process.env.USERNAME + "-bot init success");				
 			}
 			
 		});
