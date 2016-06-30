@@ -65,9 +65,11 @@
 			
 			if (this.status === 200) {
 				
-				clearInterval(animationId);
+				clearInterval(animationId);				
+				
 				var parsedResponse = JSON.parse(this.responseText);
 				updatePost(parsedResponse.post);
+				updateTimestamp();
 				
 			}
 		};
@@ -76,7 +78,6 @@
 	};
 		
 	var updatePost = function(content) {
-		updateTimestamp();
 		post.innerHTML = content;
 	};
 	
