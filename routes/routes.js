@@ -69,23 +69,25 @@ var appRouter = function(app) {
 	/** posts markov chain text in specified topic **/
 	app.get("/reply", (req, res) => {
 		
-		if (!req.query.topic || !req.query.msg) {
-			return res.send({ "status:": "ERROR: missing query parameters (needs topic & msg)" });
+		if (!req.query.topic) {
+			return res.send({ "status:": "ERROR: post endpoint requires topic parameter)" });
 		}
 		
 		var topicId = parseInt(response, 10);
 		
 		if (typeof topicId !== "number") {
 			return res.send({ "status:": "ERROR: topic id is not a number" });
-		}
+		}				
 	
 		else {
-			var options = {};			
+			var options = {};
+			
+			var firstWord = req.query.word || null;
 			
 			bot.init(app, (topicId) => {
 								
-				options.topicId = topicId;
-				options.msg = markovChain.generate(app, true, options.firstWord);					
+				options.topicId = topicId;				
+				options.msg = req.query.msg || markovChain.generate(app, true, options.firstWord);					
 							
 				postInTopic(app, res, options);
 				
