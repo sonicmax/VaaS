@@ -5,6 +5,7 @@
 	
 	/** init method creates loading animation, fetches data from api,and updates timestamp. */	    
 	var init = function() {
+		updateTimestamp();
 		animateEllipsis();
 		fetchData();	
 	};
@@ -69,7 +70,6 @@
 				
 				var parsedResponse = JSON.parse(this.responseText);
 				updatePostText(parsedResponse.post);
-				updateTimestamp();
 				
 			}
 		};
@@ -85,6 +85,7 @@
 	/** Safe method for displaying content in post element */
 	var updatePostText = function(content) {
 		post.innerText = content;
+		updateTimestamp();
 	};
 	
 	var timeoutId;
