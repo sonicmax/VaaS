@@ -12,7 +12,7 @@
 	var animationId;
 	
 	var animateEllipsis = function() {
-		// NOTE: Duplicate "..." strings in ellipsisStates array are intentional		
+		// NOTE: Duplicate "..." strings in FRAMES array are intentional
 		const FRAMES = [".", "..", "...", "...", "...", "..."];		
 		const OPEN_TAG = "<span class='loading-text'>";
 		const CLOSE_TAG = "</span>";
@@ -78,7 +78,7 @@
 	};
 		
 	var updatePost = function(content) {
-		post.innerHTML = content;
+		post.innerText = content;
 	};
 	
 	var timeoutId;
