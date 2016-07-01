@@ -3,6 +3,7 @@ var bot = require("../helpers/bot.js");
 var dbHelper = require("../helpers/db_helper.js");
 var eti = require("../helpers/eti.js");
 
+/** method which handles endpoint routing */
 var appRouter = function(app) {
 	const DEFAULT_RESPONSE = { "post": "fhuuump" };
 	
@@ -96,7 +97,7 @@ var appRouter = function(app) {
 		
 	});	
 	
-	/** parse pastebin contents and add to database **/
+	/** Attempt to add pastebin contents to database, callback with status of operation */
 	app.get("/pastebin", (req, res) => {
 		
 		if (req.query.token !== process.env.TOKEN) {
@@ -104,27 +105,31 @@ var appRouter = function(app) {
 		}
 		
 		else {
-			// Attempt to add quotes from pastebin link, callback with status of operation
 			dbHelper.addNewQuotes(req, app, (status) => { res.send( { "status:": status } )});
 		}
 		
 	});
 	
 	/** subscribe for livelinks updates **/
-	// TODO: after each request times out we need to create a new one. after 5-10 requests we should stop looking
 	app.get("/subscribe", (req, res) => {
 		
 		if (req.query.token !== process.env.TOKEN || !req.query.topic) {
 			return res.send("ERROR: invalid token in env vars, or no topic was provided in query parameter");		
 		}
 				
+		// TODO: after each request times out we need to create a new one. after 5-10 requests we should stop looking
 		eti.subscribe({"topic": req.query.topic}, (response) => { res.send(response) });
 		
 	});
 	
 	
-	// Helper methods
+	/*
+	 *  Helper methods
+	 */	 
+	 
+	/** redirects user to given URL */
 	var redirectUser = function(res, url) {
+		// TODO: validate URL before redirect? It should be fine though
 		
 		res.writeHead(302, {
 				Location: url
@@ -133,6 +138,10 @@ var appRouter = function(app) {
 		return res.end();				
 	};
 	
+	/**  
+	  *  scrapes hidden token from message list and makes async post request.
+	  *  options is object containing topic id and msg text.
+	  */
 	var postInTopic = function(app, res, options) {
 		
 		eti.getMessageList(app, options, (response) => {
@@ -140,8 +149,7 @@ var appRouter = function(app) {
 			bot.contributeToDiscussion(app, options, (response) => {
 				var topicId = parseInt(response, 10);
 				
-				if (typeof topicId !== "number") {
-					// This is probably redundant
+				if (typeof topicId !== "number") {					
 					return res.send({ "status:": response });
 				}
 				
@@ -152,6 +160,5 @@ var appRouter = function(app) {
 			});								
 		});
 	};
-};
  
 module.exports = appRouter;

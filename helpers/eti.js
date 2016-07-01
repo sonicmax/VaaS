@@ -4,10 +4,10 @@ var UINT64 = require("cuint").UINT64; // Unsigned ints
 
 var eti = function() {
 
-  /**
-    *  Allows us to find current number of unread PMs and number of posts in topic.
-    *  Polling this & scraping moremessages.php means we can keep up with replies, react to keywords, etc
-    */
+	/**
+	  *  Allows us to find current number of unread PMs and number of posts in topic.
+	  *  Polling this & scraping moremessages.php means we can keep up with replies, react to keywords, etc
+	  */
 
 	var subscribe = function(app, options, callback) {
 		const ENDPOINT = "https://evt0.endoftheinter.net/subscribe";
@@ -37,12 +37,17 @@ var eti = function() {
 		});
 	};
 		
+	/**
+	  *  Creates JSON payload for livelinks server.
+	  *  Bitwise op for livelinks ids: CHANNEL << 48 | ID
+	  */
+		
 	var generateLivelinksPayload = function(app, options) {
 		const TOPIC_CHANNEL = 0x0200;
 		const PM_CHANNEL = 0x0100;
 		const MAGIC_CONSTANT = 48; // It just works
 		
-		// We have to use UINT64 because these are Really Long numbers. bitwise op for livelinks ids: CHANNEL << 48 | ID
+		// We have to use UINT64 because these are Really Long numbers
 		var topicPayload = UINT64(TOPIC_CHANNEL).shiftLeft(UINT64(MAGIC_CONSTANT)).or(UINT64(options.topicId));
 		var pmPayload = UINT64(PM_CHANNEL).shiftLeft(UINT64(MAGIC_CONSTANT)).or(UINT64(process.env.USER_ID));
 		
@@ -52,6 +57,11 @@ var eti = function() {
 		
 		return payload;
 	};
+	
+	/**
+	  *  Loads topic list and chooses random topic from first page.
+	  *  Calls back with topic id.
+	  */	
 
 	var getTopicList = function(app, options, callback) {
 		var LUE_TOPICS = "https://boards.endoftheinter.net/topics/LUE-CJ-Anonymous-NWS-NLS";
@@ -99,13 +109,18 @@ var eti = function() {
 			}
 			
 			else {
-				app.isLoggedIn = false; // Just as a precaution
+				// TODO: we should do more thorough error checking here
+				app.isLoggedIn = false;
 				callback("ERROR: failed to load topic list");
 			}
 			
 		});
 	};
-
+	
+	/**
+	  *  Load message list so we can scrape hidden token from quickpost area (required for posting)    
+	  */
+		
 	var getMessageList = function(app, options, callback) {
 		
 		request({

@@ -4,10 +4,10 @@ var bot = function() {
 	const LOGIN_URL = "https://endoftheinter.net/";
 	const formData = { b: process.env.USERNAME, p: process.env.PASSWORD };
 
-/**
-  *  Log into eti using environment vars as credentials & do bot stuff
-  *  Calls back after successful POST to async-post.php
-  */
+	/**
+	  *  Log into eti using environment vars as credentials & do bot stuff
+	  *  Calls back after successful POST to async-post.php
+	  */
 	
 	var init = function(app, options, callback) {
 		
@@ -49,11 +49,14 @@ var bot = function() {
 			}
 			
 			else {
-				// Callback with 0 - app router will choose random topic from topic list
 				callback(0);
 			}
 		}
 	};
+	
+	/**
+	  *  Post message on ETI via async-post.php		
+	  */
 	
 	var contributeToDiscussion = function(app, options, callback) {
 		const QUICKPOST_URL = "https://boards.endoftheinter.net/async-post.php";

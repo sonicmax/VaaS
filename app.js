@@ -27,7 +27,8 @@ var routes = require("./routes/routes.js")(app);
 // Set up server
 var server = app.listen(process.env.PORT || LOCAL_HOST, () => {
 	
-	// Check that required environment variables exist
+	// Check that required environment variables exist. 
+	// Note: USER_ID of 0 would obv. be invalid, but we don't need to explicitly check as 0 gets casted to falsy value
 	if (!process.env.USERNAME || !process.env.PASSWORD || !process.env.USER_ID || !process.env.REDIS_URL || !process.env.TOKEN) {
 		console.log("ERROR: environment variables not configured correctly. see README for more info");
 		return;

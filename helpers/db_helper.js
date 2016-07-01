@@ -34,8 +34,9 @@ var dbHelper = function() {
 														
 							app.db.rpush.apply(app.db, ["quotes"].concat(quotes).concat(() => {
 									callback("Successfully added quotes to database");
-							}));		
+							}));
 						}
+						
 					});	
 				
 				}	
