@@ -24,24 +24,39 @@ var appRouter = function(app) {
 	app.get("/testbot", (req, res) => {
 		var options = {};
 		
-		bot.init(app, options, (response) => {
-			var topicId = parseInt(response, 10);
-			
+		if (req.query.topic) {			
+			var topicId = parseInt(req.query.topic, 10);			
+		
 			if (typeof topicId !== "number") {
-				// Respond with error message
-				return res.send({ "status:": response });				
+				return res.send({ "status:": "ERROR: topic parameter must be number" });				
 			}
 			
-			else if (topicId === 0) {
+			options.topicId = topicId;
+		}
+		
+		options.msg = markovChain.generate(app, true, req.query.word);		
+		
+		bot.init(app, options, (response) => {
+			
+			if (!options.topicId) {
+				// Use topic returned from bot.init method
+				var topicId = parseInt(response, 10);			
+			
+				if (typeof topicId !== "number") {
+					// Respond with error message
+					return res.send({ "status:": response });				
+				}
 				
-				options.topicId = topicId;
-				options.msg = markovChain.generate(app, true, options.firstWord);
-				
-				eti.getTopicList(app, options, (response) => {
-				
-					return postInTopic(app, res, options);
+				else if (topicId === 0) {
 					
-				});						
+					options.topicId = req.query.topic || topicId;
+					
+					eti.getTopicList(app, options, (response) => {
+					
+						return postInTopic(app, res, options);
+						
+					});						
+				}
 			}
 			
 			else {				
