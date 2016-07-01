@@ -19,11 +19,11 @@
 		
 		var state = 0;
 		
-		updatePost(OPEN_TAG + "waiting for server" + FRAMES[state] + CLOSE_TAG);	
+		updatePostHtml(OPEN_TAG + "waiting for server" + FRAMES[state] + CLOSE_TAG);	
 		
 		animationId = setInterval(() => {
 			
-			updatePost(OPEN_TAG + "waiting for server" + FRAMES[state] + CLOSE_TAG);
+			updatePostHtml(OPEN_TAG + "waiting for server" + FRAMES[state] + CLOSE_TAG);
 			
 			state++;
 			
@@ -36,7 +36,7 @@
 		
 	};
 	
-	/** Function which generates timestamp for post, formatted as: M/DD/YYYY HH:MM:SS */
+	/** generates timestamp for post, formatted as: M/DD/YYYY HH:MM:SS */
 	var updateTimestamp = function() {
 		var dateObject = new Date();
 		
@@ -49,11 +49,11 @@
 				
 		var meridiem = (dateObject.getHours() < 12) ? "AM" : "PM";
 		
-		timestamp.innerHTML = date + " " + time + " " + meridiem;
+		timestamp.innerText = date + " " + time + " " + meridiem;
 	};
 
 		
-	/** Function which handles API interaction */
+	/** fetches data from api */
 	var fetchData = function() {
 		// Use VaaS to update vesper_post element with markov chain content
 		var xhr = new XMLHttpRequest();		
@@ -68,7 +68,7 @@
 				clearInterval(animationId);				
 				
 				var parsedResponse = JSON.parse(this.responseText);
-				updatePost(parsedResponse.post);
+				updatePostText(parsedResponse.post);
 				updateTimestamp();
 				
 			}
@@ -77,18 +77,24 @@
 		xhr.send();
 	};
 		
-	var updatePost = function(content) {
+	/** Only use if certain that content can be safely injected as html */
+	var updatePostHtml = function(content) {
+		post.innerHtml = content;
+	}
+		
+	/** Safe method for displaying content in post element */
+	var updatePostText = function(content) {
 		post.innerText = content;
 	};
 	
 	var timeoutId;
 	
+	/** rate limit the refresh button to 1 press per 100ms */
 	var clickDebouncer = function(evt) {
 		clearTimeout(timeoutId);
 		timeoutId = setTimeout(init, 100);
 	};
 	
-	// Use debouncer here to prevent people from hammering my precious server
 	refreshButton.addEventListener('click', clickDebouncer);
 	
 	init();
