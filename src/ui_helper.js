@@ -20,11 +20,11 @@
 		
 		var state = 0;
 		
-		updatePostHtml(OPEN_TAG + "waiting for server" + FRAMES[state] + CLOSE_TAG);	
+		updatePostHTML(OPEN_TAG + "waiting for server" + FRAMES[state] + CLOSE_TAG);	
 		
 		animationId = setInterval(() => {
 			
-			updatePostHtml(OPEN_TAG + "waiting for server" + FRAMES[state] + CLOSE_TAG);
+			updatePostHTML(OPEN_TAG + "waiting for server" + FRAMES[state] + CLOSE_TAG);
 			
 			state++;
 			
@@ -77,12 +77,12 @@
 		xhr.send();
 	};
 		
-	/** Only use if certain that content can be safely injected as html */
-	var updatePostHtml = function(content) {
-		post.innerHtml = content;
-	}
+	/** Only use for content that can be safely injected as html */
+	var updatePostHTML = function(content) {
+		post.innerHTML = content;
+	};
 		
-	/** Safe method for displaying content in post element */
+	/** Safe method for displaying api loaded content */
 	var updatePostText = function(content) {
 		post.innerText = content;
 		updateTimestamp();
